@@ -28,7 +28,7 @@ message(PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR})
 
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
-	"src/helloHttplib.cpp"
+	"src/helloLittleGift.cpp"
 )
 
 
