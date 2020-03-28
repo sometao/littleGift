@@ -16,10 +16,10 @@
 - [ ] save data in DB.
 
 
-#### Functions
+#### Features
 - [ ] Post markdown text and get slides page.
 - [ ] keep markdown in file
-- [ ] only login user can access slides page.
 - [ ] keep markdown in DB
+- [ ] only login user can access slides page.
 - [ ] delete data after expired.
 
