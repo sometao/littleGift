@@ -17,19 +17,38 @@ IF(MSVC)
 ENDIF(MSVC)
 
 
+
+######################################
+#  zlib for httplib gzip.
+######################################
+
+set(ZLIB_LIBRARY "${PROJECT_SOURCE_DIR}/lib/zlibwapi.lib")
+
+
+
 ######################################
 #  information
 ######################################
 
 message(CMAKE_SOURCE_DIR=${CMAKE_SOURCE_DIR})
 message(PROJECT_SOURCE_DIR=${PROJECT_SOURCE_DIR})
+message(ZLIB_LIBRARY=${ZLIB_LIBRARY})
 
+
+######################################
+#  PRE BUILD DEFINE
+######################################
+if(WIN32)
+	add_definitions(-D ZLIB_WINAPI )
+endif()
+add_definitions(-D CPPHTTPLIB_ZLIB_SUPPORT )
 
 
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
 	"src/helloLittleGift.cpp"
-)
+  "src/appUitls.cpp"
+  "src/main.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
@@ -37,8 +56,17 @@ target_include_directories( ${PROJECT_NAME}
 		${PROJECT_SOURCE_DIR}/include
 )
 
-# TODO: Add tests and install targets if needed.
+target_link_libraries( ${PROJECT_NAME}  
+	PRIVATE 
+		${ZLIB_LIBRARY} 
+)
 
 
-
-
+if(WIN32)
+    # Copy DLL files to output directory
+	message("COPY ZLIB DLL")
+	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		"${PROJECT_SOURCE_DIR}/lib/zlibwapi.dll"              
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
+endif()

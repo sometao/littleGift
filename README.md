@@ -7,8 +7,8 @@
 - Learning how to use database.
 
 #### Try and learn.
-- [ ] Get Html from server
-- [ ] Post form data
+- [X] Get Html from server
+- [X] Post form data
 - [ ] Post Json data
 - [ ] Try Cookie
 - [ ] Login / Logout
