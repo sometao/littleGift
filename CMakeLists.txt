@@ -39,16 +39,17 @@ message(ZLIB_LIBRARY=${ZLIB_LIBRARY})
 #  PRE BUILD DEFINE
 ######################################
 if(WIN32)
-	add_definitions(-D ZLIB_WINAPI )
+	add_definitions(-DZLIB_WINAPI )
 endif()
-add_definitions(-D CPPHTTPLIB_ZLIB_SUPPORT )
+add_definitions(-DCPPHTTPLIB_ZLIB_SUPPORT )
 
 
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
 	"src/helloLittleGift.cpp"
   "src/appUitls.cpp"
-  "src/main.cpp")
+  "src/main.cpp" 
+	"src/pch.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
