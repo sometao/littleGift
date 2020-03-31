@@ -34,15 +34,26 @@ void setLogger() {
 
   // Set the default logger to file logger
   //auto file_logger = spdlog::basic_logger_mt("basic_logger", "logs/basic.txt");
-  auto file_logger = spdlog::basic_logger_mt("async_factory", "logs/basic.txt");
-  spdlog::set_default_logger(file_logger);
+  //auto file_logger = spdlog::basic_logger_mt("async_factory", "logs/basic.txt");
+  //spdlog::set_default_logger(file_logger);
+  //spdlog::flush_every(std::chrono::seconds(1));
 
-  spdlog::flush_every(std::chrono::seconds(1));
 
 }
 
-
 int main() {
+#ifdef CPPHTTPLIB_ZLIB_SUPPORT
+  cout << "CPPHTTPLIB_ZLIB_SUPPORT defined." << endl;
+#else
+  cout << "CPPHTTPLIB_ZLIB_SUPPORT not defined." << endl;
+#endif 
+  cout << "DONE." << endl;
+
+
+  return 0;
+}
+
+int main0() {
   using namespace httplib;
 
   setLogger();

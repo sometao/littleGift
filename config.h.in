@@ -1,0 +1,10 @@
+
+
+
+#define littleGift_VERSION_MAJOR @littleGift_VERSION_MAJOR@
+#define littleGift_VERSION_MINOR @littleGift_VERSION_MINOR@
+
+#cmakedefine CPPHTTPLIB_ZLIB_SUPPORT
+
+#cmakedefine CPPHTTPLIB_THREAD_POOL_COUNT "@CPPHTTPLIB_THREAD_POOL_COUNT@"
+
