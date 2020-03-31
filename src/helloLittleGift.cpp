@@ -3,6 +3,7 @@
 #include <sstream>
 #include <string>
 #include <cstring>
+#include "httpUtils.h"
 
 using std::cout;
 using std::endl;
@@ -16,8 +17,6 @@ extern void encodeHTML(char* des, const char* src, int desSize);
 namespace {
 using namespace httplib;
 
-using FrontHandler = std::function<bool(const Request&, Response&)>;
-using Handler = std::function<void(const Request&, Response&)>;
 
 const string helloPage(string name) {
   static constexpr const int maxLen = 128;
@@ -72,8 +71,6 @@ auto getParamsTest = [](const Request& req, Response& res) {
   }
 };
 
-// TODO form request;
-
 auto formDataTest = [](const Request& req, Response& res) {
   cout << "++++++ formDataTest ++++++" << endl;
 
@@ -103,49 +100,23 @@ auto helloJson = [](const Request& req, Response& res) {
   res.set_content(result.str(), "application/json");
 };
 
-FrontHandler jsonCheck = [](const Request& req, Response& res) {
-  if (!req.has_header("Content-Type") ||
-      req.get_header_value("Content-Type") != "application/json") {
-    auto t = req.get_header_value("Content-Type");
-    res.set_content("only json data supported, but got [" + t + "]", "application/json");
-    return false;
-  } else {
-    return true;
-  }
-};
 
 
-Handler insertFrontAction(FrontHandler front, Handler action) {
-  auto h = [=](const Request& req, Response& res) {
-    if (!jsonCheck(req, res)) {
-      return;
-    }
-    action(req, res);
-  };
-  return h;
-}
 
-
-Handler JsonReqAction(Server::Handler action) {
-  return [=](const Request& req, Response& res) {
-    if (!req.has_header("Content-Type") ||
-        req.get_header_value("Content-Type") != "application/json") {
-      auto t = req.get_header_value("Content-Type");
-      res.set_content("only json data supported, but got [" + t + "]", "application/json");
-      return;
-    }
-    action(req, res);
-  };
-}
-
-auto jsonReqTest1 = JsonReqAction([](const Request& req, Response& res) {
+auto jsonReqTest = HttpUtils::JsonReqAction([](const Request& req, Response& res) {
+  cout << "jsonReqTest  ----  1" << endl;
+  
   if (req.has_header("Content-Length")) {
+  cout << "jsonReqTest  ----  2" << endl;
     auto val = req.get_header_value("Content-Length");
     cout << "Content-Length:" << val << endl;
   }
+  cout << "jsonReqTest  ----  3" << endl;
 
   auto b = req.body;
+  cout << "jsonReqTest  ----  4" << endl;
   auto body = b.c_str();
+  cout << "jsonReqTest  ----  5" << endl;
   spdlog::info("req body: {}", body);
 
   stringstream result;
@@ -154,23 +125,6 @@ auto jsonReqTest1 = JsonReqAction([](const Request& req, Response& res) {
 
   res.set_content(result.str(), "application/json");
 });
-
-void jsonReqTest2(const Request& req, Response& res) {
-
-  auto b = req.body;
-  auto body = b.c_str();
-  spdlog::info("jsonReqTest!!!: {}", body);
-
-  stringstream result;
-  result << R"({"title": "jsonReqTest!!", "age": 102})";
-  spdlog::info("result: {}", result.str());
-
-  res.set_content(result.str(), "application/json");
-
-};
-
-
-auto jsonReqTest3 = insertFrontAction(jsonCheck, jsonReqTest2);
 
 
 }  // namespace
@@ -192,12 +146,8 @@ void setRoutes(httplib::Server& server) {
   server.Get("/helloJson", helloJson);
 
   // TODO handle json request, need some json parser.
-  server.Post("/jsonReqTest1", jsonReqTest1);
+  server.Post("/jsonReqTest", jsonReqTest);
 
-  server.Post("/jsonReqTest2", jsonReqTest2);
-
-
-  server.Post("/jsonReqTest3", jsonReqTest3);
 
   // TODO need a log tool.
 }

@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "httplib.h"
+#include "httpUtils.h"
 #include <iostream>
 #include <string>
 #include <cstring>
@@ -41,19 +42,16 @@ void setLogger() {
 
 }
 
-int main() {
-#ifdef CPPHTTPLIB_ZLIB_SUPPORT
-  cout << "CPPHTTPLIB_ZLIB_SUPPORT defined." << endl;
-#else
-  cout << "CPPHTTPLIB_ZLIB_SUPPORT not defined." << endl;
-#endif 
-  cout << "DONE." << endl;
+int main1() {
 
+
+  //auto j = httplib::jsonCheck;
+  //cout << "j: " << (j == nullptr) << endl;
 
   return 0;
 }
 
-int main0() {
+int main() {
   using namespace httplib;
 
   setLogger();
