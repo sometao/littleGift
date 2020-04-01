@@ -33,18 +33,18 @@ class HttpUtils {
     };
   };
 
-  static Handler JsonReqAction(Handler action) {
-    FrontHandler jsonCheck = [](const Request& req, Response& res) {
-      if (!req.has_header("Content-Type") ||
-          req.get_header_value("Content-Type") != "application/json") {
-        auto t = req.get_header_value("Content-Type");
-        res.set_content("only json data supported, but got [" + t + "]", "application/json");
-        return false;
-      } else {
-        return true;
-      }
-    };
+  static bool jsonCheck(const Request& req, Response& res) {
+    if (!req.has_header("Content-Type") ||
+      req.get_header_value("Content-Type") != "application/json") {
+      auto t = req.get_header_value("Content-Type");
+      res.set_content("only json data supported, but got [" + t + "]", "application/json");
+      return false;
+    } else {
+      return true;
+    }
+  }
 
+  static Handler JsonReqAction(Handler action) {
     return insertFrontAction(jsonCheck, action);
   }
 };

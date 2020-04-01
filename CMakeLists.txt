@@ -58,8 +58,8 @@ set(CPPHTTPLIB_THREAD_POOL_COUNT 64)
 option(CPPHTTPLIB_ZLIB_SUPPORT "httplib" OFF)
 
 configure_file(
-	"config.h.in" 
-	"config.h"
+	"./cmake/config.h.in" 
+	"${PROJECT_SOURCE_DIR}/include/config.h"
 	@ONLY
 )
 
@@ -72,7 +72,6 @@ message(" ===================== Information ======================")
 message(CMAKE_SOURCE_DIR         	    =  ${CMAKE_SOURCE_DIR})
 message(PROJECT_SOURCE_DIR            =  ${PROJECT_SOURCE_DIR})
 message(ZLIB_LIBRARY                  =  ${ZLIB_LIBRARY})
-message(SPDLOG_LIBRARY                =  ${SPDLOG_LIBRARY})
 message(CPPHTTPLIB_ZLIB_SUPPORT       =  ${CPPHTTPLIB_ZLIB_SUPPORT})
 message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
 
