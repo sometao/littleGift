@@ -47,6 +47,33 @@ void setLogger() {
 
 void testHtmlTemplate() {
 
+  using hTemplate::Engine;
+  using hTemplate::HtmlTemplate;
+
+  string targetFile = R"(D:\workstation\vs\littleGift\htmlTemplate\test2.html)";
+
+  auto t = Engine::loadTemplate(targetFile);
+
+  if (t != nullptr) {
+
+    cout << "name:" << t->templateName << endl;
+    cout << " ------------ " << endl;
+    for (auto & name: t->argsNameList) {
+      cout << "arg name: " << name << endl;
+    }
+    cout << " ------------ " << endl;
+    cout << "html:\n" << t->htmlString << endl;
+
+  } else {
+    cout << "cant find template:" << targetFile << endl;
+  }
+
+
+
+
+  
+
+
 
 }
 
@@ -57,6 +84,7 @@ int main() {
   //cout << "j: " << (j == nullptr) << endl;
 
   //hTemplate::Engine::loadTemplate("");
+  testHtmlTemplate();
 
   return 0;
 }

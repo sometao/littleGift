@@ -64,7 +64,7 @@ class EasyWay {
     return func;
   }
 
-  static string removeBlank(const string& target) {
+  static string removeBlanks(const string& target) {
     static std::regex blankRe{ R"(\s+)" };
     return std::regex_replace(target, blankRe, "");
   }
