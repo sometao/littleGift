@@ -4,6 +4,7 @@
 #include <string>
 #include <cstring>
 #include "httpUtils.h"
+#include "htmlTemplate.h"
 
 using std::cout;
 using std::endl;

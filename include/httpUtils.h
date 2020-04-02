@@ -6,6 +6,7 @@ namespace httplib {
 using std::cout;
 using std::endl;
 
+
 class HttpUtils {
  public:
   using FrontHandler = std::function<bool(const Request&, Response&)>;
@@ -21,7 +22,7 @@ class HttpUtils {
     return h;
   };
 
-  static Handler JsonReqAction_bkp(Handler action) {
+  static Handler JsonReqAction1(Handler action) {
     return [=](const Request& req, Response& res) {
       if (!req.has_header("Content-Type") ||
           req.get_header_value("Content-Type") != "application/json") {
@@ -48,5 +49,7 @@ class HttpUtils {
     return insertFrontAction(jsonCheck, action);
   }
 };
+
+
 
 }  // namespace httplib

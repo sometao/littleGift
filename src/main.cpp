@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <cstring>
+#include "htmlTemplate.h"
 
 using std::cout;
 using std::endl;
@@ -42,29 +43,31 @@ void setLogger() {
 
 }
 
-int main1() {
+
+
+void testHtmlTemplate() {
+
+
+}
+
+int main() {
 
 
   //auto j = httplib::jsonCheck;
   //cout << "j: " << (j == nullptr) << endl;
 
+  //hTemplate::Engine::loadTemplate("");
+
   return 0;
 }
 
-int main() {
+int main0() {
   using namespace httplib;
 
   setLogger();
 
   cout << " ---  " << endl;
   spdlog::info("hello, little Gift.");
-  spdlog::info("hello, little Gift.");
-  spdlog::info("hello, little Gift.");
-  spdlog::info("hello, little Gift.");
-  spdlog::info("hello, little Gift.");
-  spdlog::info("hello, little Gift.");
-
-  cout << " ---  " << endl;
 
   Server svr;
 
