@@ -2,9 +2,11 @@
 #include "httplib.h"
 #include "httpUtils.h"
 #include <iostream>
+#include <fstream>
 #include <string>
 #include <cstring>
 #include "htmlTemplate.h"
+
 
 using std::cout;
 using std::endl;
@@ -47,10 +49,12 @@ void setLogger() {
 
 void testHtmlTemplate() {
 
-  using hTemplate::Engine;
-  using hTemplate::HtmlTemplate;
+  using httpTemplate::Engine;
+  using httpTemplate::HtmlTemplate;
 
-  string targetFile = R"(D:\workstation\vs\littleGift\htmlTemplate\test2.html)";
+  //string targetFile = R"(D:\workstation\vs\littleGift\htmlTemplate\test2.html)";
+  //string targetFile = R"(.\htmlTemplate\test2.html)";
+  string targetFile = "test2.html";
 
   auto t = Engine::loadTemplate(targetFile);
 
@@ -58,11 +62,20 @@ void testHtmlTemplate() {
 
     cout << "name:" << t->templateName << endl;
     cout << " ------------ " << endl;
-    for (auto & name: t->argsNameList) {
+    for (auto& name : t->argsNameList) {
       cout << "arg name: " << name << endl;
     }
     cout << " ------------ " << endl;
-    cout << "html:\n" << t->htmlString << endl;
+    //cout << "html:\n" << t->htmlString << endl;
+
+    std::vector<string> args{ "hello, html template.", "2020哈哈" , "我得名字" };
+    auto out = t->genHtml(args);
+    cout << "----------------  out html -------------------:\n" << out << endl;
+
+    string outFile  = "outHtml1.html";
+    std::ofstream os{ outFile };
+    os << out;
+    cout << "write html to" << outFile << endl;
 
   } else {
     cout << "cant find template:" << targetFile << endl;
@@ -70,20 +83,35 @@ void testHtmlTemplate() {
 
 
 
+}
 
-  
 
+void testStringSplit() {
+  string target = "title,date";
 
+  auto rst = httpTemplate::StringUtils::split(target, ",");
+
+  for (auto & a : rst) {
+    cout << "a: " << a << endl;
+  }
+
+}
+
+void testChinese() {
+  cout << "I am English." << endl;
+  cout << "我是中文" << endl;
+  cout << "I am 中国人" << endl;
 
 }
 
 int main() {
-
-
+  //system("chcp 65001");
   //auto j = httplib::jsonCheck;
   //cout << "j: " << (j == nullptr) << endl;
 
-  //hTemplate::Engine::loadTemplate("");
+  //httpTemplate::Engine::loadTemplate("test2.html");
+  //testChinese();
+  //testStringSplit();
   testHtmlTemplate();
 
   return 0;
@@ -104,7 +132,7 @@ int main0() {
     char buf[BUFSIZ];
     snprintf(buf, sizeof(buf), fmt, res.status);
     res.set_content(buf, "text/html");
-  });
+    });
 
 
   setRoutes(svr);

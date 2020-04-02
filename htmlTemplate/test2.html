@@ -1,4 +1,4 @@
-<!--Args(title)-->
+﻿<!--Args(title, date ,   name )-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -45,13 +45,18 @@
       margin: 0;
       text-align: center;
     }
-
   </style>
 
 </head>
 <body style="background:black; color:white">
   <div id="titleRow">
-    <h1 class="c-text">@{{title}}@</h1>
+    <h1 class="c-text">@{{title}}我是标题哦@</h1>
+  </div>
+  <div id="titleRow">
+    <h1 class="c-text">@{{date}}@</h1>
+  </div>
+  <div id="titleRow">
+    <h1 class="c-text">@{{name}}我是占位符好好的占着位置@</h1>
   </div>
 
   <div id="outer">

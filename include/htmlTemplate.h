@@ -10,7 +10,7 @@
 #include <memory>
 #include <iterator>
 
-namespace hTemplate {
+namespace httpTemplate {
 
 using std::cout;
 using std::endl;
@@ -24,16 +24,14 @@ class StringUtils {
     const auto spLen = sp.length();
     string::size_type pos = 0;
     auto f = target.find(sp, pos);
-    if (f == string::npos) {
-      rst.emplace_back(target);
-    } else {
-      while (f != string::npos) {
-        auto r = target.substr(pos, f - pos);
-        rst.emplace_back(r);
-        pos = f + spLen;
-        f = target.find(sp, pos);
-      }
+
+    while (f != string::npos) {
+      auto r = target.substr(pos, f - pos);
+      rst.emplace_back(r);
+      pos = f + spLen;
+      f = target.find(sp, pos);
     }
+    rst.emplace_back(target.substr(pos, target.length()));
     return rst;
   }
 
@@ -48,7 +46,7 @@ class HtmlTemplate {
     vector<std::regex> ls{};
     std::transform(argNameList.begin(), argNameList.end(), std::back_inserter(ls),
                    [](const string& argName) -> std::regex {
-                     return std::regex{"@\\{\\{" + argName + "\\}\\}@"};
+                     return std::regex{"@\\{\\{" + argName + "\\}\\}.*@"};
                    });
     return ls;
   }
@@ -69,13 +67,25 @@ class HtmlTemplate {
   }
 
   string genHtml(const vector<string>& args) {
-    // TODO implement.
-    return "";
+    if (args.size() != argsPatternList.size()) {
+      throw std::runtime_error("args error for template[" + templateName + "]");
+    } else {
+      string outHtml = htmlString;
+      for (int i = 0; i < argsPatternList.size(); i++) {
+        auto p = argsPatternList.at(i);
+        auto value = args.at(i);
+        outHtml = std::regex_replace(outHtml, p, value);
+      }
+      return outHtml;
+    }
   }
 };
 
 class Engine {
   Engine(){};
+
+  const string TEMPLATE_DIR = "./htmlTemplate/";
+
   std::unordered_map<string, std::shared_ptr<HtmlTemplate>> templateMap{};
   static Engine& getInstance() {
     static Engine instance;
@@ -91,7 +101,7 @@ class Engine {
     }
   };
 
-  std::shared_ptr<HtmlTemplate> loadTemplateImp(const string& templateFile) {
+  std::shared_ptr<HtmlTemplate> loadTemplateImp(const string& templateName) {
     //<!--Args(title)-->
 
     static const std::regex argsLineRe{R"(<!--Args\((.*)\)-->)"};
@@ -103,13 +113,10 @@ class Engine {
     auto getArgs = [&](string ln) -> bool {
       if (std::regex_search(ln, sm, argsLineRe)) {
         auto argsStr = sm.str(1);
-        cout << "find args line:" << argsStr << endl;
+        cout << "argsStr:" << argsStr << endl;
         argsStr = StringUtils::removeBlanks(argsStr);
-        cout << "find args line process:" << argsStr << endl;
+        cout << "argsStr processed:" << argsStr << endl;
         args = StringUtils::split(argsStr, ",");
-        for (auto& a : args) {
-          cout << "arg:\n" << a << endl;
-        }
         return true;
       } else {
         return false;
@@ -117,19 +124,11 @@ class Engine {
     };
 
     string htmlString{};
-    string templateName;
-
+    string templateFilePath = TEMPLATE_DIR + templateName;
     {
       bool argsGot = false;
-      std::ifstream is{templateFile};
+      std::ifstream is{templateFilePath};
       if (is.is_open()) {
-        templateName = std::regex_replace(templateFile, winPathSplitorRe, "/");
-        auto namePos = templateName.find_last_of("/");
-        if (namePos != string::npos) {
-          namePos += 1;
-          templateName = templateName.substr(namePos, templateName.length() - namePos);
-        }
-
         string line{};
         while (std::getline(is, line)) {
           if (!argsGot) {
@@ -140,7 +139,7 @@ class Engine {
           htmlString += "\n";
         }
       } else {
-        throw std::runtime_error("can not open template file: " + templateFile);
+        throw std::runtime_error("can not open template file: " + templateFilePath);
       }
     }
 
@@ -162,4 +161,4 @@ class Engine {
   static std::shared_ptr<HtmlTemplate> getTemplate(const string& templateName) {}
 };
 
-}  // namespace hTemplate
+}  // namespace httpTemplate
