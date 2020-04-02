@@ -47,7 +47,8 @@ class HtmlTemplate {
   static std::regex getRegex(string argName) {
     // <!--@title-->一些文字内容<!--title@-->
     // string regStr = "@\\{\\{" + argName + "\\}\\}.*@";
-    string regStr = "<!--@" + argName + "-->.*<!--" + argName + "@-->";
+    //string regStr = "<!--@" + argName + "-->.*<!--" + argName + "@-->";
+    string regStr = "<!--@" + argName + "-->(\n|.)*<!--" + argName + "@-->";
     return std::regex{regStr,  std::regex::optimize };
   };
 
