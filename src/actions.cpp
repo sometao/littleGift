@@ -1,65 +1,40 @@
-﻿#include "pch.h"
+#include "pch.h"
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <cstring>
 #include "httpUtils.h"
 #include "htmlTemplate.h"
 
+namespace littleGift {
 using std::cout;
 using std::endl;
 using std::string;
 using std::stringstream;
 
-namespace appUtils {
-extern void encodeHTML(char* des, const char* src, int desSize);
+
+namespace pages {
+
+extern const string helloPage(string name);
+
 }
 
-namespace {
+namespace actions {
+
 using namespace httplib;
 
+using Handler = Server::Handler;
 
-const string helloPage(string name) {
-  static constexpr const int maxLen = 128;
-
-  char tmp[maxLen] = {0};
-  appUtils::encodeHTML(tmp, name.c_str(), maxLen);
-  cout << "tmp:\n" << tmp << endl;
-
-  static constexpr const char fmt[] = R"(<html>
-  <head>
-  </head>
-  <body>
-    <p>Hello</p>
-    <p>%s</p>
-  <body>
-<html>)";
-
-  constexpr int len = sizeof(fmt);
-  constexpr int size = len + maxLen;
-  char out[size] = {0};
-
-  auto r = snprintf(out, size, fmt, tmp);
-  cout << "fmt:\n" << fmt << endl;
-  cout << "name: " << name << endl;
-  cout << "len: " << len << endl;
-  cout << "size: " << size << endl;
-  cout << "r: " << r << endl;
-  cout << "out:\n" << out << endl;
-  return out;
-}
-
-auto helloAction = [](const Request& req, Response& res) {
+Handler helloAction = [](const Request& req, Response& res) {
   cout << "++++++ hello 2 ++++++" << endl;
   if (req.has_param("name")) {
     auto name = req.get_param_value("name");
-    res.set_content(helloPage(name + "_2"), "text/html");
+    res.set_content(pages::helloPage(name + "_2"), "text/html");
   } else {
     res.set_content("error: No param [name] found.\n", "text/plain");
   }
 };
 
-auto getParamsTest = [](const Request& req, Response& res) {
+Handler getParamsTest = [](const Request& req, Response& res) {
   cout << "++++++ getParamsTest ++++++" << endl;
   if (req.has_param("p1") && req.has_param("p2")) {
     auto v1 = req.get_param_value("p1");
@@ -72,7 +47,7 @@ auto getParamsTest = [](const Request& req, Response& res) {
   }
 };
 
-auto formDataTest = [](const Request& req, Response& res) {
+Handler formDataTest = [](const Request& req, Response& res) {
   cout << "++++++ formDataTest ++++++" << endl;
 
   auto size = req.files.size();
@@ -95,20 +70,17 @@ auto formDataTest = [](const Request& req, Response& res) {
   }
 };
 
-auto helloJson = [](const Request& req, Response& res) {
+Handler helloJson = [](const Request& req, Response& res) {
   stringstream result;
   result << R"({"title": "hello Json", "age": 100})";
   res.set_content(result.str(), "application/json");
 };
 
-
-
-
-auto jsonReqTest = HttpUtils::JsonReqAction([](const Request& req, Response& res) {
+Handler jsonReqTest = HttpUtils::JsonReqAction([](const Request& req, Response& res) {
   cout << "jsonReqTest  ----  1" << endl;
-  
+
   if (req.has_header("Content-Length")) {
-  cout << "jsonReqTest  ----  2" << endl;
+    cout << "jsonReqTest  ----  2" << endl;
     auto val = req.get_header_value("Content-Length");
     cout << "Content-Length:" << val << endl;
   }
@@ -127,28 +99,6 @@ auto jsonReqTest = HttpUtils::JsonReqAction([](const Request& req, Response& res
   res.set_content(result.str(), "application/json");
 });
 
+}  // namespace actions
 
-}  // namespace
-
-void setRoutes(httplib::Server& server) {
-  int ret = -1;
-  ret = server.set_mount_point("/public", "./www");
-
-  server.Get("/hi", [](const Request& /*req*/, Response& res) {
-    res.set_content("Hello LittleGift.\n", "text/plain");
-  });
-
-  server.Get("/hello", helloAction);
-
-  server.Get("/paramsTest", getParamsTest);
-
-  server.Post("/formDataTest", formDataTest);
-
-  server.Get("/helloJson", helloJson);
-
-  // TODO handle json request, need some json parser.
-  server.Post("/jsonReqTest", jsonReqTest);
-
-
-  // TODO need a log tool.
-}
+}  // namespace littleGift

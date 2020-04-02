@@ -11,7 +11,7 @@ project ("littleGift" VERSION 0.3)
 
 # --------------------------------------------------------------------------
 # specify the C++ standard
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_CXX_FLAGS "-D__STDC_CONSTANT_MACROS")
 
@@ -78,10 +78,10 @@ message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
 
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
-	"src/helloLittleGift.cpp"
+	"src/routes.cpp"
   "src/appUitls.cpp"
   "src/main.cpp" 
-	"src/pch.cpp" )
+	"src/pch.cpp"  "src/tmptest.cpp" "src/actions.cpp" "src/pages.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
@@ -112,7 +112,14 @@ endif()
 # Copy htmlTemplate files to output directory
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
 	COMMAND ${CMAKE_COMMAND} -E copy_directory 
-	"${PROJECT_SOURCE_DIR}/htmlTemplate"              
+	"${PROJECT_SOURCE_DIR}/resources/htmlTemplate"              
+	$<TARGET_FILE_DIR:${PROJECT_NAME}>/htmlTemplate)
+
+
+# Copy www files to output directory
+add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+	COMMAND ${CMAKE_COMMAND} -E copy_directory 
+	"${PROJECT_SOURCE_DIR}/resources/www"              
 	$<TARGET_FILE_DIR:${PROJECT_NAME}>/htmlTemplate)
 
 

@@ -1,6 +1,6 @@
 #include <cstring>
 
-namespace appUtils {
+namespace littleGift {
 
 void decodeHTML(char* des, const char* src, int desSize) {
   for (int i = 0; i < desSize - 1 && *src; ++i, des++) {

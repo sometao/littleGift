@@ -10,6 +10,8 @@
 #include <memory>
 #include <iterator>
 
+#define HTML_TEMPLATE_DIR "./htmlTemplate/"
+
 namespace httpTemplate {
 
 using std::cout;
@@ -42,12 +44,17 @@ class StringUtils {
 };
 
 class HtmlTemplate {
+  static std::regex getRegex(string argName) {
+    // <!--@title-->一些文字内容<!--title@-->
+    // string regStr = "@\\{\\{" + argName + "\\}\\}.*@";
+    string regStr = "<!--@" + argName + "-->.*<!--" + argName + "@-->";
+    return std::regex{regStr,  std::regex::optimize };
+  };
+
   static vector<std::regex> patternInitHalper(vector<string>& argNameList) {
     vector<std::regex> ls{};
     std::transform(argNameList.begin(), argNameList.end(), std::back_inserter(ls),
-                   [](const string& argName) -> std::regex {
-                     return std::regex{"@\\{\\{" + argName + "\\}\\}.*@"};
-                   });
+                   [](const string& argName) { return getRegex(argName); });
     return ls;
   }
 
@@ -84,7 +91,7 @@ class HtmlTemplate {
 class Engine {
   Engine(){};
 
-  const string TEMPLATE_DIR = "./htmlTemplate/";
+  const string TEMPLATE_DIR = HTML_TEMPLATE_DIR;
 
   std::unordered_map<string, std::shared_ptr<HtmlTemplate>> templateMap{};
   static Engine& getInstance() {
