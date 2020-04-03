@@ -27,7 +27,7 @@ extern Handler jsonReqTest;
 void setRoutes(httplib::Server& server) {
   int ret = -1;
 
-  ret = server.set_mount_point("/littleGift/public", "./www");
+  ret = server.set_mount_point("/littleGift/public", "./public");
 
   server.Get("/hi", [](const Request& /*req*/, Response& res) {
     res.set_content("Hello LittleGift.\n", "text/plain");

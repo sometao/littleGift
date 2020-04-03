@@ -47,7 +47,8 @@ void testHtmlTemplate() {
 
   //string targetFile = R"(D:\workstation\vs\littleGift\htmlTemplate\test2.html)";
   //string targetFile = R"(.\htmlTemplate\test2.html)";
-  string targetFile = "hello.html";
+  //string targetFile = "hello.html";
+  string targetFile = "editorPage.html";
 
   auto t = Engine::loadTemplate(targetFile);
 
@@ -59,9 +60,12 @@ void testHtmlTemplate() {
       cout << "arg name: " << name << endl;
     }
     cout << " ------------ " << endl;
-    //cout << "html:\n" << t->htmlString << endl;
+    cout << "html:\n" << t->htmlString << endl;
 
     std::vector<string> args{ "hello, html template.", "2020哈哈" , "我得名字" };
+
+
+
     auto out = t->genHtml(args);
     cout << "----------------  out html -------------------:\n" << out << endl;
 

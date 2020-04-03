@@ -81,7 +81,7 @@ add_executable (${PROJECT_NAME}
 	"src/routes.cpp"
   "src/appUitls.cpp"
   "src/main.cpp" 
-	"src/pch.cpp"  "src/tmptest.cpp" "src/actions.cpp" "src/pages.cpp")
+	"src/pch.cpp"  "src/tmptest.cpp" "src/actions.cpp" "src/pages.cpp" "src/testActions.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
@@ -119,7 +119,7 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
 # Copy www files to output directory
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
 	COMMAND ${CMAKE_COMMAND} -E copy_directory 
-	"${PROJECT_SOURCE_DIR}/resources/www"              
-	$<TARGET_FILE_DIR:${PROJECT_NAME}>/htmlTemplate)
+	"${PROJECT_SOURCE_DIR}/resources/public"              
+	$<TARGET_FILE_DIR:${PROJECT_NAME}>/)
 
 

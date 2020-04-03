@@ -1,0 +1,51 @@
+<!--Args(name, code)-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>BasePage</title>
+  <style>
+    html, body {
+      margin: 0px;
+      min-width: 100%;
+      height: 100%;
+    }
+
+
+    #code-outer {
+      width: 100%;
+      font-size: 18px;
+      background: #303030;
+      margin: 0 auto;
+      padding:20px;
+      color: white;
+    }
+    #code-container {
+      width: 50%;
+      font-size: 18px;
+      background: green;
+      margin: 0 auto;
+      padding:20px;
+      color: white;
+    }
+
+
+    .c-text {
+      margin: 0;
+      text-align: center;
+    }
+
+  </style>
+</head>
+<body style="background:black; color:white">
+  <div>
+    <h1 class="c-text">Hello</h1>
+    <p class="c-text"><!--@name[-->用户的名字<!--]name@--></p>
+    <div id="code-outer">
+      <pre id="code-container"><!--@name[-->代码占位符<!--]name@--></pre>
+    </div>
+  </div>
+</body>
+</html>
+
+

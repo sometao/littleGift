@@ -1,9 +1,9 @@
-<!--Args(title, date, name )-->
+﻿<!--Args()-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>@{{title}}@</title>
+  <title>littleGift</title>
 
   <style>
     html, body {
@@ -50,20 +50,23 @@
 </head>
 <body style="background:black; color:white">
   <div id="titleRow">
-    <h1 class="c-text">@{{title}}我是标题哦@</h1>
+    <h1 class="c-text">Little Gift</h1>
   </div>
-  <div id="titleRow">
-    <h1 class="c-text">@{{date}}@</h1>
-  </div>
-  <div id="titleRow">
-    <h1 class="c-text">@{{name}}我是占位符好好的占着位置@</h1>
-  </div>
+
 
   <div id="outer">
     <div id="editor-container">
-      <textarea id="code-editor" rows="20" cols="80"></textarea>
-      <button style="margin:4px 0 0 0;">OK</button>
+      <textarea id="code-editor" rows="20" cols="80" form="dataForm" name="code"></textarea>
+      <form id="dataForm" action="/littleGift/postData" method="post">
+        <p>First name: <input type="text" name="fname" /></p>
+        <p>Last name: <input type="text" name="lname" /></p>
+        <input type="submit" value="Submit" />
+      </form>
     </div>
+
   </div>
+
+
+
 </body>
 </html>
