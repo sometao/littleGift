@@ -14,13 +14,15 @@ extern void setRoutes(httplib::Server& server);
 }
 
 extern void testHtmlTemplate();
+extern void testStringSplit();
 
-int main() {
-  testHtmlTemplate();
+int main1() {
+  //testHtmlTemplate();
+  testStringSplit();
   return 0;
 }
 
-int main0() {
+int main() {
   using namespace httplib;
 
   spdlog::set_level(spdlog::level::debug);  // Set global log level to debug

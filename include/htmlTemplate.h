@@ -23,6 +23,10 @@ class StringUtils {
  public:
   static std::vector<string> split(const string& target, const string& sp) {
     std::vector<string> rst{};
+    if (target.size() == 0) {
+      return rst;
+    }
+
     const auto spLen = sp.length();
     string::size_type pos = 0;
     auto f = target.find(sp, pos);

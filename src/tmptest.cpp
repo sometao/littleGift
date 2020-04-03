@@ -62,7 +62,8 @@ void testHtmlTemplate() {
     cout << " ------------ " << endl;
     cout << "html:\n" << t->htmlString << endl;
 
-    std::vector<string> args{ "hello, html template.", "2020哈哈" , "我得名字" };
+    std::vector<string> args{};
+    //std::vector<string> args{ "hello, html template.", "2020哈哈" , "我得名字" };
 
 
 
@@ -84,10 +85,12 @@ void testHtmlTemplate() {
 
 
 void testStringSplit() {
-  string target = "title,date";
+  //string target = "title,date";
+  string target = "";
 
   auto rst = httpTemplate::StringUtils::split(target, ",");
 
+  cout << "size:" << rst.size() << endl;
   for (auto& a : rst) {
     cout << "a: " << a << endl;
   }
@@ -101,7 +104,7 @@ void testChinese() {
 
 }
 
-int main1() {
+int main999() {
   //system("chcp 65001");
   //auto j = httplib::jsonCheck;
   //cout << "j: " << (j == nullptr) << endl;

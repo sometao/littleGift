@@ -22,6 +22,8 @@ extern Handler getParamsTest;
 extern Handler formDataTest;
 extern Handler helloJson;
 extern Handler jsonReqTest;
+extern Handler editor;
+extern Handler result;
 }  // namespace actions
 
 void setRoutes(httplib::Server& server) {
@@ -42,6 +44,11 @@ void setRoutes(httplib::Server& server) {
   server.Get("/helloJson", actions::helloJson);
 
   server.Post("/jsonReqTest", actions::jsonReqTest);
+
+  server.Get("/editor", actions::editor);
+
+  server.Get("/result", actions::result);
+
 
 }
 

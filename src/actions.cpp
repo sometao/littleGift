@@ -27,11 +27,11 @@ using Handler = Server::Handler;
 
 
 
-Handler editorAction = [](const Request& req, Response& res) {
+Handler editor= [](const Request& req, Response& res) {
   res.set_content(pages::editor(), "text/html");
 };
 
-Handler resultAction = [](const Request& req, Response& res) {
+Handler result = [](const Request& req, Response& res) {
   res.set_content(pages::result("Tom", "#lala\n- aaa\n- bbb"), "text/html");
 };
 
