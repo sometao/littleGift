@@ -56,6 +56,8 @@ include(./cmake/utils.cmake)
 
 set(CPPHTTPLIB_THREAD_POOL_COUNT 64)
 option(CPPHTTPLIB_ZLIB_SUPPORT "httplib" OFF)
+set(SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE)
+set(LOG_FILE_NAME "littleGift.log")
 
 configure_file(
 	"./cmake/config.h.in" 
@@ -81,12 +83,11 @@ add_executable (${PROJECT_NAME}
 	"src/routes.cpp"
   "src/appUitls.cpp"
   "src/main.cpp" 
-	"src/pch.cpp"  "src/tmptest.cpp" "src/actions.cpp" "src/pages.cpp" "src/testActions.cpp")
+	"src/pch.cpp"  "src/tmptest.cpp" "src/actions.cpp" "src/pages.cpp" "src/testActions.cpp" "src/logger.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
 	PRIVATE 
-		${PROJECT_BINARY_DIR}
 		${PROJECT_SOURCE_DIR}/include
 )
 

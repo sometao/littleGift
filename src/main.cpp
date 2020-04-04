@@ -13,22 +13,41 @@ namespace littleGift {
 extern void setRoutes(httplib::Server& server);
 }
 
+namespace lgtest {
+
 extern void testHtmlTemplate();
 extern void testStringSplit();
+}  // namespace lgtest
 
 int main1() {
-  //testHtmlTemplate();
-  testStringSplit();
+  // testHtmlTemplate();
+  lgtest::testStringSplit();
   return 0;
 }
+
+namespace logger {
+  extern void setBaseLogger();
+  extern void shutdownLogger();
+}
+
 
 int main() {
   using namespace httplib;
 
-  spdlog::set_level(spdlog::level::debug);  // Set global log level to debug
-  spdlog::debug("This message should be displayed..");
+  logger::setBaseLogger();
 
-  spdlog::info("hello, little Gift.");
+  for (int i = 0; i < 1000; i++) {
+
+    T_LOG("00000---------- {}", i++);
+    D_LOG("1111111-------- {}", i++);
+    I_LOG("222222222-------{}", i++);
+    W_LOG("33333333333-----{}", i++);
+    E_LOG("4444444444444---{}", i++);
+
+  }
+
+
+  cout << "STARTED." << endl;
 
   Server svr;
 
@@ -45,5 +64,6 @@ int main() {
 
   cout << "DONE." << endl;
 
+  logger::shutdownLogger();
   return 0;
 }
