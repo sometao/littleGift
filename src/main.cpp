@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include "htmlTemplate.h"
+#include <atomic>
 
 using std::cout;
 using std::endl;
@@ -26,7 +27,7 @@ int main1() {
 }
 
 namespace logger {
-  extern void setBaseLogger();
+  extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
   extern void shutdownLogger();
 }
 
@@ -36,18 +37,27 @@ int main() {
 
   logger::setBaseLogger();
 
+  std::atomic<int> c{0};
+
   for (int i = 0; i < 1000; i++) {
 
-    T_LOG("00000---------- {}", i++);
-    D_LOG("1111111-------- {}", i++);
-    I_LOG("222222222-------{}", i++);
-    W_LOG("33333333333-----{}", i++);
-    E_LOG("4444444444444---{}", i++);
+    T_LOG("00000-----------{}", c.fetch_add(1));
+    D_LOG("1111111---------{}", c.fetch_add(1));
+    I_LOG("222222222-------{}", c.fetch_add(1));
+    W_LOG("33333333333-----{}", c.fetch_add(1));
+    E_LOG("4444444444444---{}", c.fetch_add(1));
 
   }
 
 
   cout << "STARTED." << endl;
+
+  if (true) {
+    logger::shutdownLogger();
+    return 0;
+  }
+
+
 
   Server svr;
 
