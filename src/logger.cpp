@@ -12,6 +12,14 @@
 #define LOG_FILE_NAME "application.log"
 #endif  // !LOG_FILE_NAME
 
+//short for logger, you may copy following define to your CPP/H file.
+#define T_LOG(...) SPDLOG_TRACE(__VA_ARGS__)
+#define D_LOG(...) SPDLOG_DEBUG(__VA_ARGS__)
+#define I_LOG(...) SPDLOG_INFO(__VA_ARGS__)
+#define W_LOG(...) SPDLOG_WARN(__VA_ARGS__)
+#define E_LOG(...) SPDLOG_ERROR(__VA_ARGS__)
+
+
 namespace logger {
 
 
@@ -49,6 +57,24 @@ void setBaseLogger() {
   }
 
 
+}
+
+
+void testLogger() {
+
+  setBaseLogger();
+
+  std::cout << "testLogger BEGIN" << std::endl;
+  for (int i = 0; i < 1000; i++) {
+
+    T_LOG("00000---------- {}", i++);
+    D_LOG("1111111-------- {}", i++);
+    I_LOG("222222222-------{}", i++);
+    W_LOG("33333333333-----{}", i++);
+    E_LOG("4444444444444---{}", i++);
+  }
+
+  std::cout << "testLogger FINISH" << std::endl;
 }
 
 void shutdownLogger() {
