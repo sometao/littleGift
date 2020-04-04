@@ -17,6 +17,7 @@ using namespace httplib;
 using Handler = Server::Handler;
 
 namespace actions {
+extern httplib::Logger actionLogger;
 extern Handler helloAction;
 extern Handler getParamsTest;
 extern Handler formDataTest;
@@ -24,12 +25,16 @@ extern Handler helloJson;
 extern Handler jsonReqTest;
 extern Handler editor;
 extern Handler result;
+extern Handler saveSlices;
 }  // namespace actions
 
-void setRoutes(httplib::Server& server) {
-  int ret = -1;
 
-  ret = server.set_mount_point("/littleGift/public", "./public");
+void setRoutes(httplib::Server& server) {
+
+
+  if(server.set_mount_point("/littleGift/public", "./public")){
+    throw std::runtime_error("mount ./public failed.");
+  }
 
   server.Get("/hi", [](const Request& /*req*/, Response& res) {
     res.set_content("Hello LittleGift.\n", "text/plain");
@@ -48,6 +53,8 @@ void setRoutes(httplib::Server& server) {
   server.Get("/editor", actions::editor);
 
   server.Get("/result", actions::result);
+
+  server.Post("/saveSlices", actions::saveSlices);
 
 
 }

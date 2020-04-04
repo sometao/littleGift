@@ -7,6 +7,7 @@
 #include <iostream>
 #include <memory>
 #include <vector>
+#include <atomic>
 
 #ifndef LOG_FILE_NAME
 #define LOG_FILE_NAME "application.log"
@@ -39,7 +40,7 @@ shared_ptr<spdlog::logger> getLogger(std::vector<spdlog::sink_ptr> sinks) {
 void setBaseLogger(bool stdOutOn = true, bool fileOutOn = true) {
   auto logFileName = LOG_FILE_NAME;
 
-  auto pattern = "[%Y%m%d %H:%M:%S.%e %s:%#][%!] [%^%L%$]: %v";
+  auto pattern = "[%Y%m%d %H:%M:%S.%e %s:%#] [%^%L%$]: %v";
 
   try {
     auto console_sink = std::make_shared<spdlog::sinks::stdout_color_sink_mt>();
@@ -76,13 +77,15 @@ void setBaseLogger(bool stdOutOn = true, bool fileOutOn = true) {
 void testLogger() {
   setBaseLogger();
 
+  std::atomic<int> c{ 0 };
+
   std::cout << "testLogger BEGIN" << std::endl;
   for (int i = 0; i < 1000; i++) {
-    T_LOG("00000---------- {}", i++);
-    D_LOG("1111111-------- {}", i++);
-    I_LOG("222222222-------{}", i++);
-    W_LOG("33333333333-----{}", i++);
-    E_LOG("4444444444444---{}", i++);
+    T_LOG("00000-----------{}", c.fetch_add(1));
+    D_LOG("1111111---------{}", c.fetch_add(1));
+    I_LOG("222222222-------{}", c.fetch_add(1));
+    W_LOG("33333333333-----{}", c.fetch_add(1));
+    E_LOG("4444444444444---{}", c.fetch_add(1));
   }
 
   std::cout << "testLogger FINISH" << std::endl;

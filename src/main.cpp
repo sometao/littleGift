@@ -1,10 +1,11 @@
 #include "pch.h"
-#include "httplib.h"
-#include "httpUtils.h"
 #include <iostream>
 #include <string>
-#include "htmlTemplate.h"
 #include <atomic>
+#include <chrono>
+#include <thread>
+#include "httpUtils.h"
+#include "htmlTemplate.h"
 
 using std::cout;
 using std::endl;
@@ -12,10 +13,10 @@ using std::string;
 
 namespace littleGift {
 extern void setRoutes(httplib::Server& server);
+extern void config(httplib::Server& server);
 }
 
 namespace lgtest {
-
 extern void testHtmlTemplate();
 extern void testStringSplit();
 }  // namespace lgtest
@@ -27,53 +28,51 @@ int main1() {
 }
 
 namespace logger {
-  extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
-  extern void shutdownLogger();
+extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
+extern void shutdownLogger();
+}  // namespace logger
+
+namespace {
+using namespace httplib;
+
+void startServer(Server& svr, const char* host, int port) {
+  I_LOG("starting server {}:{}", host, port);
+  svr.listen(host, port, 0);
+  W_LOG("Server thread exited.");
 }
 
+}  // namespace
 
 int main() {
   using namespace httplib;
 
   logger::setBaseLogger();
-
-  std::atomic<int> c{0};
-
-  for (int i = 0; i < 1000; i++) {
-
-    T_LOG("00000-----------{}", c.fetch_add(1));
-    D_LOG("1111111---------{}", c.fetch_add(1));
-    I_LOG("222222222-------{}", c.fetch_add(1));
-    W_LOG("33333333333-----{}", c.fetch_add(1));
-    E_LOG("4444444444444---{}", c.fetch_add(1));
-
-  }
-
-
   cout << "STARTED." << endl;
 
-  if (true) {
-    logger::shutdownLogger();
-    return 0;
-  }
-
-
+  auto interface = "localhost";
+  auto port = 50080;
 
   Server svr;
-
-  svr.set_error_handler([](const auto& req, auto& res) {
-    auto fmt = "<p>Error Status: <span style='color:red;'>%d</span></p>";
-    char buf[BUFSIZ];
-    snprintf(buf, sizeof(buf), fmt, res.status);
-    res.set_content(buf, "text/html");
-  });
-
   littleGift::setRoutes(svr);
+  littleGift::config(svr);
+  std::thread serverThread{startServer, std::ref(svr), interface, port};
+  serverThread.detach();
 
-  svr.listen("localhost", 50080);
+  int counter = 60;
+  while (!svr.is_running() && --counter > 0) {
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  }
 
+  I_LOG("SERVER STARTED: {}:{}", interface, port);
+
+
+  while (svr.is_running()) {
+    std::this_thread::sleep_for(std::chrono::seconds(5));
+    T_LOG("Server is running");
+  }
+
+  W_LOG("SERVER STOPPED.");
   cout << "DONE." << endl;
-
   logger::shutdownLogger();
   return 0;
 }
