@@ -61,8 +61,10 @@ include(./cmake/utils.cmake)
 set(CPPHTTPLIB_THREAD_POOL_COUNT 64)
 option(CPPHTTPLIB_ZLIB_SUPPORT "httplib gzip support" OFF)
 option(CPPHTTPLIB_OPENSSL_SUPPORT "httplib ssl support" ONE)
+
 set(SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE)
 set(LOG_FILE_NAME "littleGift.log")
+set(CA_CERT_FILE "./resources/ca-bundle.crt")
 
 configure_file(
 	"./cmake/config.h.in" 
@@ -120,24 +122,25 @@ if(WIN32)
 	message("COPY ZLIB DLL")
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-		"${PROJECT_SOURCE_DIR}/lib/zlibwapi.dll"              
-		$<TARGET_FILE_DIR:${PROJECT_NAME}>)
+			"${PROJECT_SOURCE_DIR}/lib/zlibwapi.dll"              
+			$<TARGET_FILE_DIR:${PROJECT_NAME}>
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${PROJECT_SOURCE_DIR}/lib/libcrypto-1_1-x64.dll"              
+			$<TARGET_FILE_DIR:${PROJECT_NAME}>		
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${PROJECT_SOURCE_DIR}/lib/libssl-1_1-x64.dll"              
+			$<TARGET_FILE_DIR:${PROJECT_NAME}>
+	)
 endif()
 
-# Copy htmlTemplate files to output directory
+# Copy resource dir to output directory
 add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD  
 	COMMAND ${CMAKE_COMMAND} -E remove_directory   
-		$<TARGET_FILE_DIR:${PROJECT_NAME}>/htmlTemplate
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>/resources
 	COMMAND ${CMAKE_COMMAND} -E copy_directory 
-		"${PROJECT_SOURCE_DIR}/resources/htmlTemplate"              
-		$<TARGET_FILE_DIR:${PROJECT_NAME}>/htmlTemplate
+		"${PROJECT_SOURCE_DIR}/resources"              
+		$<TARGET_FILE_DIR:${PROJECT_NAME}>/resources
 )
 
-
-# Copy www files to output directory
-add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
-	COMMAND ${CMAKE_COMMAND} -E copy_directory 
-	"${PROJECT_SOURCE_DIR}/resources/public"              
-	$<TARGET_FILE_DIR:${PROJECT_NAME}>/)
 
 

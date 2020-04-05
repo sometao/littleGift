@@ -32,7 +32,7 @@ extern Handler saveSlices;
 void setRoutes(httplib::Server& server) {
 
 
-  if(server.set_mount_point("/littleGift/public", "./public")){
+  if(server.set_mount_point("/littleGift/public", "./resource/public")){
     throw std::runtime_error("mount ./public failed.");
   }
 

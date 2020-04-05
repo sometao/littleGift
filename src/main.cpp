@@ -19,11 +19,12 @@ extern void config(httplib::Server& server);
 namespace lgtest {
 extern void testHtmlTemplate();
 extern void testStringSplit();
+extern void testHttpClient();
 }  // namespace lgtest
 
-int main1() {
+int main() {
   // testHtmlTemplate();
-  lgtest::testStringSplit();
+  lgtest::testHttpClient();
   return 0;
 }
 
@@ -43,7 +44,7 @@ void startServer(Server& svr, const char* host, int port) {
 
 }  // namespace
 
-int main() {
+int main1() {
   using namespace httplib;
 
   logger::setBaseLogger();

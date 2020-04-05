@@ -11,3 +11,5 @@
 #define SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE
 #define LOG_FILE_NAME "littleGift.log"
 
+#define CA_CERT_FILE "./resources/ca-bundle.crt"
+

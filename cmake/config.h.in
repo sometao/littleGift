@@ -11,3 +11,5 @@
 #cmakedefine SPDLOG_ACTIVE_LEVEL @SPDLOG_ACTIVE_LEVEL@
 #cmakedefine LOG_FILE_NAME "@LOG_FILE_NAME@"
 
+#cmakedefine CA_CERT_FILE "@CA_CERT_FILE@"
+

@@ -19,13 +19,17 @@ void testHttpClient() {
   httplib::SSLClient cli("www.baidu.com");
   // httplib::SSLClient cli("google.com");
   // httplib::SSLClient cli("www.youtube.com");
-  cli.set_ca_cert_path("./ca-bundle.crt");
+  cli.set_ca_cert_path(CA_CERT_FILE);
   cli.enable_server_certificate_verification(true);
 #else
   httplib::Client cli("localhost", 8080);
 #endif
+  cout << "GET request: www.baidu.com" << endl;
+  auto res = cli.Get("/");
 
-  auto res = cli.Get("/hi");
+  cout << "resutlt get." << endl;
+
+
   if (res) {
     cout << res->status << endl;
     cout << res->get_header_value("Content-Type") << endl;
@@ -36,6 +40,7 @@ void testHttpClient() {
     if (result) {
       cout << "verify error: " << X509_verify_cert_error_string(result) << endl;
     }
+    cout << result << endl;
 #endif
   }
 

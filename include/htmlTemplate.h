@@ -10,7 +10,7 @@
 #include <memory>
 #include <iterator>
 
-#define HTML_TEMPLATE_DIR "./htmlTemplate/"
+#define HTML_TEMPLATE_DIR "./resource/htmlTemplate/"
 
 namespace httpTemplate {
 
