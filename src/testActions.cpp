@@ -74,7 +74,7 @@ Handler helloJson = [](const Request& req, Response& res) {
   res.set_content(result.str(), "application/json");
 };
 
-Handler jsonReqTest = HttpUtils::JsonReqAction([](const Request& req, Response& res) {
+Handler jsonReqTest = httpUtils::JsonReqAction([](const Request& req, Response& res) {
   cout << "jsonReqTest  ----  1" << endl;
 
   if (req.has_header("Content-Length")) {

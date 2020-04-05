@@ -28,7 +28,11 @@ ENDIF(MSVC)
 
 set(ZLIB_LIBRARY "${PROJECT_SOURCE_DIR}/lib/zlibwapi.lib")
 
-
+######################################
+#  openSSL for httplib https.
+######################################
+set(LIBSSL_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libssl.lib")
+set(LIBCRYPTO_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libcrypto.lib")
 
 
 
@@ -55,7 +59,8 @@ include(./cmake/utils.cmake)
 #-------------------------------------
 
 set(CPPHTTPLIB_THREAD_POOL_COUNT 64)
-option(CPPHTTPLIB_ZLIB_SUPPORT "httplib" OFF)
+option(CPPHTTPLIB_ZLIB_SUPPORT "httplib gzip support" OFF)
+option(CPPHTTPLIB_OPENSSL_SUPPORT "httplib ssl support" ONE)
 set(SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE)
 set(LOG_FILE_NAME "littleGift.log")
 
@@ -89,7 +94,7 @@ add_executable (${PROJECT_NAME}
 	"src/pages.cpp" 
 	"src/testActions.cpp" 
 	"src/logger.cpp" 
-	"src/base.cpp")
+	"src/base.cpp" "src/httpUtils.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
@@ -104,6 +109,9 @@ target_include_directories( ${PROJECT_NAME}
 target_link_libraries( ${PROJECT_NAME}  
 	PRIVATE 
 		${ZLIB_LIBRARY} 
+		${LIBSSL_LIBRARY} 
+		${ZLIB_LIBRARY} 
+		${LIBCRYPTO_LIBRARY} 
 )
 
 

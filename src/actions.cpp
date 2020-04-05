@@ -18,17 +18,18 @@ extern const string result(const string& name, const string& code);
 
 }  // namespace pages
 
+
+
 namespace actions {
 
 using namespace httplib;
 using Handler = Server::Handler;
 
 Handler editor = [](const Request& req, Response& res) {
-  res.set_content(pages::editor(), "text/html");
+  res.set_content(pages::editor(), httpUtils::contentType::html);
 };
 
 Handler saveSlices = [&](const Request& req, Response& res) {
-
   D_LOG("files size = {}", req.files.size());
   D_LOG("body = {}", req.body);
 
@@ -36,7 +37,6 @@ Handler saveSlices = [&](const Request& req, Response& res) {
   if (it != req.headers.end()) {
     D_LOG("Content-Type = {}: {}", it->first, it->second);
   }
-
 
   auto files = req.files;
   for (auto& f : files) {
@@ -52,17 +52,22 @@ Handler saveSlices = [&](const Request& req, Response& res) {
     stringstream result;
     result << "got you slices." << endl;
     result << "mdContent:\n" << mdContent;
-    res.set_content(result.str(), "text/plain");
+    T_LOG("result:{}", result.str());
+    cout << "结果：" << result.str() << endl;
+    //res.set_content(result.str(), httpUtils::contentType::plain);
+    
+    res.status = 301;
+    res.headers.insert({"Location", "/result"});
+
+
   } else {
     W_LOG("req.has_file(\"mdContent\") error");
     res.status = 404;
   }
-
-  res.set_content(pages::editor(), "text/html");
 };
 
 Handler result = [](const Request& req, Response& res) {
-  res.set_content(pages::result("Tom", "#lala\n- aaa\n- bbb"), "text/html");
+  res.set_content(pages::result("Tom", "#lala\n- aaa\n- bbb"), httpUtils::contentType::html);
 };
 
 }  // namespace actions
