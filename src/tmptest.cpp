@@ -1,21 +1,24 @@
 #include "pch.h"
 #include "htmlTemplate.h"
 #include <string>
-
+#include "sqlite3.h"
 
 using std::cout;
 using std::endl;
 using std::string;
 
-
 namespace lgtest {
 
-void testHttpClient() {
+void testSqlite3() {
+  // TODO test sqlite3.
+  return;
+}
 
+void testHttpClient() {
   using namespace httplib;
 
 #ifdef CPPHTTPLIB_OPENSSL_SUPPORT
-  //httplib::SSLClient cli("localhost", 8080);
+  // httplib::SSLClient cli("localhost", 8080);
   httplib::SSLClient cli("www.baidu.com");
   // httplib::SSLClient cli("google.com");
   // httplib::SSLClient cli("www.youtube.com");
@@ -28,7 +31,6 @@ void testHttpClient() {
   auto res = cli.Get("/");
 
   cout << "resutlt get." << endl;
-
 
   if (res) {
     cout << res->status << endl;
@@ -43,8 +45,6 @@ void testHttpClient() {
     cout << result << endl;
 #endif
   }
-
-
 }
 
 void setLogger() {

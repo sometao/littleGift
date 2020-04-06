@@ -21,18 +21,24 @@ IF(MSVC)
     SET(CMAKE_CXX_FLAGS "/EHsc")  # deal with MSVC Warning C4530
 ENDIF(MSVC)
 
+include(./.SET_LOCAL_PATH.cmake)
 
-######################################
+
+#-------------------------------------
 #  zlib for httplib gzip.
-######################################
-
+#-------------------------------------
 set(ZLIB_LIBRARY "${PROJECT_SOURCE_DIR}/lib/zlibwapi.lib")
 
-######################################
+#-------------------------------------
 #  openSSL for httplib https.
-######################################
+#-------------------------------------
 set(LIBSSL_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libssl.lib")
 set(LIBCRYPTO_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libcrypto.lib")
+
+#-------------------------------------
+#  sqlite3 lib.
+#-------------------------------------
+set(SQLITE3_LIBRARY "${PROJECT_SOURCE_DIR}/lib/sqlite3.lib")
 
 
 
@@ -42,6 +48,7 @@ set(LIBCRYPTO_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libcrypto.lib")
 if(WIN32)
 	add_definitions(-DZLIB_WINAPI )
 endif()
+
 
 
 
@@ -96,7 +103,9 @@ add_executable (${PROJECT_NAME}
 	"src/pages.cpp" 
 	"src/testActions.cpp" 
 	"src/logger.cpp" 
-	"src/base.cpp" "src/httpUtils.cpp")
+	"src/base.cpp" 
+	"src/httpUtils.cpp"
+)
 
 
 target_include_directories( ${PROJECT_NAME}  
@@ -114,6 +123,7 @@ target_link_libraries( ${PROJECT_NAME}
 		${LIBSSL_LIBRARY} 
 		${ZLIB_LIBRARY} 
 		${LIBCRYPTO_LIBRARY} 
+		${SQLITE3_LIBRARY} 
 )
 
 
@@ -129,6 +139,9 @@ if(WIN32)
 			$<TARGET_FILE_DIR:${PROJECT_NAME}>		
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${PROJECT_SOURCE_DIR}/lib/libssl-1_1-x64.dll"              
+			$<TARGET_FILE_DIR:${PROJECT_NAME}>
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${PROJECT_SOURCE_DIR}/lib/sqlite3.dll"              
 			$<TARGET_FILE_DIR:${PROJECT_NAME}>
 	)
 endif()
