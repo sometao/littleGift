@@ -12,4 +12,5 @@
 #cmakedefine LOG_FILE_NAME "@LOG_FILE_NAME@"
 
 #cmakedefine CA_CERT_FILE "@CA_CERT_FILE@"
+#cmakedefine SQLITE_DB_FILE "@SQLITE_DB_FILE@"
 

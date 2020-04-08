@@ -12,4 +12,5 @@
 #define LOG_FILE_NAME "littleGift.log"
 
 #define CA_CERT_FILE "./resources/ca-bundle.crt"
+#define SQLITE_DB_FILE "D:/workstation/vs/littleGift/littleGift.db"
 

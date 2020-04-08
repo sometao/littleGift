@@ -10,7 +10,9 @@
 #include <memory>
 #include <iterator>
 
+#ifndef HTML_TEMPLATE_DIR
 #define HTML_TEMPLATE_DIR "./resource/htmlTemplate/"
+#endif  // !HTML_TEMPLATE_DIR
 
 namespace httpTemplate {
 
@@ -51,10 +53,10 @@ class HtmlTemplate {
   static std::regex getRegex(string argName) {
     // <!--@title-->一些文字内容<!--title@-->
     // string regStr = "@\\{\\{" + argName + "\\}\\}.*@";
-    //string regStr = "<!--@" + argName + "-->.*<!--" + argName + "@-->";
-    //string regStr = "<!--@" + argName + "-->(\n|.)*<!--" + argName + "@-->";
+    // string regStr = "<!--@" + argName + "-->.*<!--" + argName + "@-->";
+    // string regStr = "<!--@" + argName + "-->(\n|.)*<!--" + argName + "@-->";
     string regStr = "<!--@" + argName + "\\[-->.*<!--\\]" + argName + "@-->";
-    return std::regex{regStr,  std::regex::optimize };
+    return std::regex{regStr, std::regex::optimize};
   };
 
   static vector<std::regex> patternInitHalper(vector<string>& argNameList) {
@@ -76,7 +78,7 @@ class HtmlTemplate {
         htmlString(template_),
         argsNameList(argsNameList_),
         argsPatternList(patternInitHalper(argsNameList_)) {
-    //cout << "HtmlTemplate create: " << templateName << endl;
+    // cout << "HtmlTemplate create: " << templateName << endl;
   }
 
   string genHtml(const vector<string>& args) {
@@ -126,9 +128,9 @@ class Engine {
     auto getArgs = [&](string ln) -> bool {
       if (std::regex_search(ln, sm, argsLineRe)) {
         auto argsStr = sm.str(1);
-        //cout << "argsStr:" << argsStr << endl;
+        // cout << "argsStr:" << argsStr << endl;
         argsStr = StringUtils::removeBlanks(argsStr);
-        //cout << "argsStr processed:" << argsStr << endl;
+        // cout << "argsStr processed:" << argsStr << endl;
         args = StringUtils::split(argsStr, ",");
         return true;
       } else {

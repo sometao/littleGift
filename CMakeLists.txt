@@ -67,11 +67,12 @@ include(./cmake/utils.cmake)
 
 set(CPPHTTPLIB_THREAD_POOL_COUNT 64)
 option(CPPHTTPLIB_ZLIB_SUPPORT "httplib gzip support" OFF)
-option(CPPHTTPLIB_OPENSSL_SUPPORT "httplib ssl support" ONE)
+option(CPPHTTPLIB_OPENSSL_SUPPORT "httplib ssl support" ON)
 
 set(SPDLOG_ACTIVE_LEVEL SPDLOG_LEVEL_TRACE)
 set(LOG_FILE_NAME "littleGift.log")
 set(CA_CERT_FILE "./resources/ca-bundle.crt")
+set(SQLITE_DB_FILE "${PROJECT_SOURCE_DIR}/littleGift.db")
 
 configure_file(
 	"./cmake/config.h.in" 
@@ -105,7 +106,7 @@ add_executable (${PROJECT_NAME}
 	"src/logger.cpp" 
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
-)
+ "src/database.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  

@@ -1,4 +1,4 @@
-#include "pch.h"
+#include "littleGift.h"
 #include <iostream>
 #include <string>
 #include <atomic>
@@ -14,7 +14,7 @@ using std::string;
 namespace littleGift {
 extern void setRoutes(httplib::Server& server);
 extern void config(httplib::Server& server);
-}
+}  // namespace littleGift
 
 namespace lgtest {
 extern void testHtmlTemplate();
@@ -22,9 +22,14 @@ extern void testStringSplit();
 extern void testHttpClient();
 }  // namespace lgtest
 
+namespace database {
+extern void init();
+}
+
 int main() {
   // testHtmlTemplate();
-  lgtest::testHttpClient();
+  // lgtest::testHttpClient();
+  database::init();
   return 0;
 }
 
@@ -65,7 +70,6 @@ int main1() {
   }
 
   I_LOG("SERVER STARTED: {}:{}", interface, port);
-
 
   while (svr.is_running()) {
     std::this_thread::sleep_for(std::chrono::seconds(5));

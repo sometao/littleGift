@@ -11,10 +11,11 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 
+## customize 
 out/
 build/
 .SET_LOCAL_PATH.cmake
-
+*.db
 
 
 ## Ignore Visual Studio temporary files, build results, and
