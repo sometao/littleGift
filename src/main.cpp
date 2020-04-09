@@ -1,4 +1,5 @@
 #include "littleGift.h"
+#include "database.h"
 #include <iostream>
 #include <string>
 #include <atomic>
@@ -16,27 +17,42 @@ extern void setRoutes(httplib::Server& server);
 extern void config(httplib::Server& server);
 }  // namespace littleGift
 
+namespace logger {
+extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
+extern void shutdownLogger();
+}  // namespace logger
+
 namespace lgtest {
 extern void testHtmlTemplate();
 extern void testStringSplit();
 extern void testHttpClient();
 }  // namespace lgtest
 
-namespace database {
-extern void init();
+void testDB() {
+  D_LOG("test DB begin.");
+  using namespace database;
+  DB& db = DB::getInstence();
+  db.init();
+
+  
+
+  D_LOG("test DB done.");
 }
 
 int main() {
   // testHtmlTemplate();
   // lgtest::testHttpClient();
-  database::init();
+  logger::setBaseLogger();
+  testDB();
+
+  //std::this_thread::sleep_for(std::chrono::milliseconds(50));
+
+
+  I_LOG(" --  [9]   -----------------");
+  logger::shutdownLogger();
+  I_LOG(" --  [10]   -----------------");
   return 0;
 }
-
-namespace logger {
-extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
-extern void shutdownLogger();
-}  // namespace logger
 
 namespace {
 using namespace httplib;

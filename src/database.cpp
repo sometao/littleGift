@@ -1,31 +1,27 @@
-#include "littleGift.h"
-#include <string>
-#include <functional>
-#include "sqlite3.h"
-#include "memory"
+#include "database.h"
 
 namespace database {
-using std::function;
-using std::string;
-using std::unique_ptr;
 
-const string dbFile = SQLITE_DB_FILE;
-
-static void shutdown(sqlite3* db) {
-  if (db) {
-    sqlite3_close(db);
-    I_LOG("Database[{}] shutdown.", dbFile);
-  } else {
-    E_LOG("Can't shutdown database[{}], it is nullptr", dbFile);
+DB::DB() : dbFile(SQLITE_DB_FILE) {
+  int rc = sqlite3_open(dbFile.c_str(), &dbHandle);
+  T_LOG("sqlite3_open result={}", rc);
+  if (rc) {
+    E_LOG("Can't open database[{}]: {}", dbFile, sqlite3_errmsg(dbHandle));
+    sqlite3_close(dbHandle);
+    throw std::runtime_error("open database error.");
   }
+  I_LOG("Database opened: {}", dbFile);
 }
 
-static unique_ptr<sqlite3, function<void(sqlite3*)>> dbHandle{nullptr, shutdown};
+void DB::init() {
+  I_LOG("Database init: begin", dbFile);
 
-namespace {
+  I_LOG("Database init: end", dbFile);
+}
 
-void initContentTable() { 
-  const string sql = R"(
+void DB::initContentTable() {
+  {
+    const string sql = R"(
 CREATE TABLE IF NOT EXISTS slides(
 	id						INTEGER					PRIMARY KEY AUTOINCREMENT,
 	author_name		VARCHAR(64),
@@ -35,31 +31,30 @@ CREATE TABLE IF NOT EXISTS slides(
 	edit_code			VARCHAR(128)		NOT NULL,
 	create_time		INTEGER					NOT NULL );
 )";
-  char* zErrMsg = 0;
-  int rc = sqlite3_exec(dbHandle.get(), sql.c_str(), nullptr, 0, &zErrMsg);
-  if (rc != SQLITE_OK) {
-    E_LOG("SQL createContentTable error: {}", zErrMsg);
-    sqlite3_free(zErrMsg);
-    throw std::runtime_error("SQL createContentTable error");
+
+    char* zErrMsg = 0;
+    int rc = sqlite3_exec(dbHandle, sql.c_str(), nullptr, 0, &zErrMsg);
+    if (rc != SQLITE_OK) {
+      E_LOG("SQL createContentTable error: {}", zErrMsg);
+      sqlite3_free(zErrMsg);
+      throw std::runtime_error("SQL createContentTable error");
+    }
+    I_LOG("init createContentTable done.");
   }
-  I_LOG("init createContentTable.");
 }
 
-}  // namespace
+DB::~DB() {
+  W_LOG("Database destructed begin.");
+  //if (dbHandle) {
+  //  W_LOG("Database destructed do nothing.");
+  //  // sqlite3_close(dbHandle);
+  //}
+  //W_LOG("Database destructed end.");
+}
 
-
-//TODO test db init.
-void init() {
-  sqlite3* db;
-  int rc = sqlite3_open(dbFile.c_str(), &db);
-  T_LOG("sqlite3_open result={}", rc);
-  if (rc) {
-    E_LOG("Can't open database[{}]: {}", dbFile, sqlite3_errmsg(db));
-    sqlite3_close(db);
-    throw std::runtime_error("open database error.");
-  }
-  dbHandle.reset(db);
-  initContentTable();
+DB& DB::getInstence() {
+  static DB instence{};
+  return instence;
 }
 
 }  // namespace database

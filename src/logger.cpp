@@ -92,8 +92,8 @@ void testLogger() {
 }
 
 void shutdownLogger() {
-  spdlog::drop_all();
-  spdlog::shutdown();
+  //spdlog::shutdown();
+  //spdlog::drop_all();
 }
 
 }  // namespace logger
