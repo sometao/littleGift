@@ -1,15 +1,12 @@
 #include <string>
 
 using std::string;
-
-
-namespace littleGIft {
+namespace littleGift {
 namespace dao {
 
 
 
-
-struct SlideRow {
+struct SlidesRow {
   int64_t id;
   string authorName;
   string content;
@@ -18,9 +15,6 @@ struct SlideRow {
   string editCode;
   int64_t create_time;
 };
-
-
-
 
 
 
