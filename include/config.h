@@ -1,4 +1,4 @@
-
+#pragma once
 
 
 #define littleGift_VERSION_MAJOR 0

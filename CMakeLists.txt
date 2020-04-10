@@ -106,7 +106,7 @@ add_executable (${PROJECT_NAME}
 	"src/logger.cpp" 
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
- "src/database.cpp")
+ "src/DAO.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  

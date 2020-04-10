@@ -12,7 +12,7 @@ Server::Handler errorHandler = [](const Request& req, Response& res) {
   res.set_content(buf, "text/html");
 };
 
-Logger baseLogger = [](const Request& req, const Response& res) {
+httplib::Logger baseLogger = [](const Request& req, const Response& res) {
   I_LOG("[{}] access {}", req.method, req.path);
 };
 

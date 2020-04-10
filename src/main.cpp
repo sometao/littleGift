@@ -1,5 +1,5 @@
 #include "littleGift.h"
-#include "database.h"
+#include "seeker/database.h"
 #include <iostream>
 #include <string>
 #include <atomic>
@@ -17,10 +17,10 @@ extern void setRoutes(httplib::Server& server);
 extern void config(httplib::Server& server);
 }  // namespace littleGift
 
-namespace logger {
-extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
-extern void shutdownLogger();
-}  // namespace logger
+//namespace logger {
+//extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
+//extern void shutdownLogger();
+//}  // namespace logger
 
 namespace lgtest {
 extern void testHtmlTemplate();
@@ -29,28 +29,29 @@ extern void testHttpClient();
 }  // namespace lgtest
 
 void testDB() {
-  D_LOG("test DB begin.");
-  using namespace database;
-  DB& db = DB::getInstence();
-  db.init();
+  D_LOG("test SqliteDB begin.");
+  using namespace seeker;
+  SqliteDB::init( SQLITE_DB_FILE );
 
-  
-
-  D_LOG("test DB done.");
+  D_LOG("test SqliteDB done.");
 }
 
 int main() {
   // testHtmlTemplate();
   // lgtest::testHttpClient();
-  logger::setBaseLogger();
+
+  seeker::Logger::init( LOG_FILE_NAME );
+
+  E_LOG(" --  [1]   -----------------");
   testDB();
 
-  //std::this_thread::sleep_for(std::chrono::milliseconds(50));
 
+  I_LOG(" --  [2]   -----------------");
 
-  I_LOG(" --  [9]   -----------------");
-  logger::shutdownLogger();
-  I_LOG(" --  [10]   -----------------");
+  //I_LOG(" --  [10]   -----------------");
+  //std::this_thread::sleep_for(std::chrono::milliseconds(1500));
+
+  cout << "DONE" << endl;
   return 0;
 }
 
@@ -68,7 +69,6 @@ void startServer(Server& svr, const char* host, int port) {
 int main1() {
   using namespace httplib;
 
-  logger::setBaseLogger();
   cout << "STARTED." << endl;
 
   auto interface = "localhost";
@@ -94,6 +94,5 @@ int main1() {
 
   W_LOG("SERVER STOPPED.");
   cout << "DONE." << endl;
-  logger::shutdownLogger();
   return 0;
 }
