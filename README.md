@@ -22,3 +22,10 @@
 - [ ] only login user can access slides page.
 - [ ] delete data after expired.
 
+
+
+
+#### botan compile modules
+```
+python ./configure.py --cc=msvc --cpu=x86_64 --os=windows --minimized-build --enable-modules=md5,sha1,sha1_sse2,hash,hash_id,hex,rng,rsa,aes,base64,system_rng,uuid,des 
+```
