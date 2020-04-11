@@ -19,17 +19,20 @@
 
 namespace seeker {
 
-  using std::string;
+using std::string;
 
 // TODO test logger.
 class Logger {
-  Logger(const string& logFile, bool stdOutOn, bool fileOutOn, const string& pattern, bool useAsyn) {
+  string logFileName;
+  string usePattern;
 
+  Logger(const string& logFile, bool stdOutOn, bool fileOutOn, const string& pattern,
+         bool useAsyn) {
     const string defaultLogFile = "./application.log";
-    auto logFileName = logFile.length() > 0 ? logFile : defaultLogFile;
+    logFileName = logFile.length() > 0 ? logFile : defaultLogFile;
 
     const string defaultPattern = "[%Y%m%d %H:%M:%S.%e %s:%#] [%^%L%$]: %v";
-    const string usePattern = pattern.length() > 0 ? pattern : defaultPattern;
+    usePattern = pattern.length() > 0 ? pattern : defaultPattern;
 
     std::cout << "init Logger with pattern: " << usePattern << std::endl;
     std::cout << "Logger stdOutOn=[" << stdOutOn << "] fileOutOn=[" << fileOutOn << "]"
@@ -73,7 +76,7 @@ class Logger {
   };
 
   std::shared_ptr<spdlog::async_logger> getAsyncLogger(std::vector<spdlog::sink_ptr> sinks) {
-    spdlog::init_thread_pool(1024, 4);
+    spdlog::init_thread_pool(1024, 1);
     auto combined_logger = std::make_shared<spdlog::async_logger>(
         "asy_multi_sink", begin(sinks), end(sinks), spdlog::thread_pool());
     return combined_logger;
@@ -96,11 +99,19 @@ class Logger {
     std::cout << "Logger has been shutdown." << std::endl;
   };
 
-  static void init(const string& logFile = "", bool stdOutOn = true, bool fileOutOn = true, const string& pattern = "", bool useAsyn = true) {
+  static void init(const string& logFile = "", bool stdOutOn = true, bool fileOutOn = true,
+                   const string& pattern = "", bool useAsyn = true) {
     static bool inited = false;
     if (!inited) {
       static Logger instence{logFile, stdOutOn, fileOutOn, pattern, useAsyn};
-      I_LOG("Logger inited success.");
+      I_LOG("Logger inited success: logFile [{}]", instence.logFileName);
+      I_LOG("Logger setting: stdOutOn[{}] fileOutOn[{}] useAsyn[{}]",
+            stdOutOn,
+            fileOutOn,
+            useAsyn);
+      I_LOG("Logger pattern: {}", instence.usePattern);
+
+
     } else {
       W_LOG("Logger has been inited before, do nothing.");
     }

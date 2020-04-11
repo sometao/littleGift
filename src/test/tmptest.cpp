@@ -7,12 +7,9 @@ using std::cout;
 using std::endl;
 using std::string;
 
-namespace lgtest {
+namespace littleGift {
+namespace test {
 
-void testSqlite3() {
-  // TODO test sqlite3.
-  return;
-}
 
 void testHttpClient() {
   using namespace httplib;
@@ -142,4 +139,8 @@ int main999() {
   return 0;
 }
 
-}  // namespace lgtest
+
+}  // namespace test
+
+
+}  // namespace littleGift

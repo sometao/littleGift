@@ -14,7 +14,7 @@ namespace dao {
 
 
 
-int callback1(void* NotUsed, int argc, char** argv, char** azColName) {
+static int callback1(void* NotUsed, int argc, char** argv, char** azColName) {
   int i;
   cout << "runSql callback rst: ";
   for (i = 0; i < argc; i++) {

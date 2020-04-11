@@ -13,47 +13,21 @@ using std::endl;
 using std::string;
 
 namespace littleGift {
+
 extern void setRoutes(httplib::Server& server);
 extern void config(httplib::Server& server);
-}  // namespace littleGift
 
-//namespace logger {
-//extern void setBaseLogger(bool offStdOut = false, bool offFileOut = false);
-//extern void shutdownLogger();
-//}  // namespace logger
-
-namespace lgtest {
+namespace test {
 extern void testHtmlTemplate();
 extern void testStringSplit();
 extern void testHttpClient();
-}  // namespace lgtest
-
-void testDB() {
-  D_LOG("test SqliteDB begin.");
-  using namespace seeker;
-  SqliteDB::init( SQLITE_DB_FILE );
-
-  D_LOG("test SqliteDB done.");
-}
-
-int main() {
-  // testHtmlTemplate();
-  // lgtest::testHttpClient();
-
-  seeker::Logger::init( LOG_FILE_NAME );
-
-  E_LOG(" --  [1]   -----------------");
-  testDB();
+extern void testDbInit();
+}  // namespace test
 
 
-  I_LOG(" --  [2]   -----------------");
+}  // namespace littleGift
 
-  //I_LOG(" --  [10]   -----------------");
-  //std::this_thread::sleep_for(std::chrono::milliseconds(1500));
 
-  cout << "DONE" << endl;
-  return 0;
-}
 
 namespace {
 using namespace httplib;
@@ -64,20 +38,18 @@ void startServer(Server& svr, const char* host, int port) {
   W_LOG("Server thread exited.");
 }
 
-}  // namespace
+int launch() {
 
-int main1() {
   using namespace httplib;
-
   cout << "STARTED." << endl;
 
-  auto interface = "localhost";
+  auto interface = "0.0.0.0";
   auto port = 50080;
 
   Server svr;
   littleGift::setRoutes(svr);
   littleGift::config(svr);
-  std::thread serverThread{startServer, std::ref(svr), interface, port};
+  std::thread serverThread{ startServer, std::ref(svr), interface, port };
   serverThread.detach();
 
   int counter = 60;
@@ -96,3 +68,24 @@ int main1() {
   cout << "DONE." << endl;
   return 0;
 }
+
+void runTest() {
+  //for test.
+  I_LOG("runTest begin.");
+  using namespace littleGift::test;
+  testDbInit();
+  I_LOG("runTest end.");
+}
+
+}  // namespace
+
+
+
+
+int main() {
+  seeker::Logger::init(LOG_FILE_NAME);
+  //launch();
+
+  runTest();
+}
+

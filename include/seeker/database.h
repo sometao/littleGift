@@ -3,11 +3,13 @@
 #include "sqlite3.h"
 #include <string>
 #include <mutex>
+#include <vector>
 
 namespace seeker {
 using std::function;
-using std::string;
 using std::mutex;
+using std::string;
+using std::vector;
 
 class SqliteDB {
   const string dbFile;
@@ -17,6 +19,12 @@ class SqliteDB {
 
 
   SqliteDB(const string& file) : dbFile(file) {
+    if (file.length() == 0) {
+      string msg = "Database file can not be empty.";
+      E_LOG(msg);
+      throw std::runtime_error(msg);
+    }
+
     int rc = sqlite3_open(dbFile.c_str(), &dbHandle);
     I_LOG("sqlite3_open file[{}] result={}", dbFile, rc);
     if (rc) {
@@ -37,22 +45,20 @@ class SqliteDB {
   SqliteDB& operator=(const SqliteDB&) = delete;
 
   ~SqliteDB() {
-    std::cout << "Database destructed begin" << std::endl;
-    W_LOG("Database destructed begin.");
     if (dbHandle) {
-      W_LOG("Database destructed do nothing.");
-      // sqlite3_close(dbHandle);
+      W_LOG("Sqlite3 Closing.");
+      sqlite3_close(dbHandle);
+    } else {
+      W_LOG("No sqlite3 to close.");
     }
-    W_LOG("Database destructed end.");
-    std::cout << "Database destructed end" << std::endl;
   }
 
   static void init(const string& file) {
     static bool inited = false;
     if (!inited) {
       inited = true;
-      I_LOG("Init Database with file = ", file);
-      getInstence();
+      I_LOG("Init Database with file = {}", file);
+      getInstence(file);
       I_LOG("Database inited success. db file = {}", file);
     } else {
       W_LOG("Database has been inited before, do nothing.");
@@ -62,7 +68,8 @@ class SqliteDB {
   static void perpare(const string& sql, sqlite3_stmt** stmt) {
     auto& ins = getInstence();
     if (sqlite3_prepare_v2(ins.dbHandle, sql.c_str(), -1, stmt, nullptr) != SQLITE_OK) {
-      string errMsg = fmt::format("Prepare SQL [{}] error: {}", sql, sqlite3_errmsg(ins.dbHandle));
+      string errMsg =
+          fmt::format("Prepare SQL [{}] error: {}", sql, sqlite3_errmsg(ins.dbHandle));
       W_LOG(errMsg);
       throw std::runtime_error(errMsg);
     }
@@ -94,6 +101,10 @@ class SqliteDB {
     return ins.insertMutex;
   }
 
+  //TODO for debug.
+  static vector<string> listTables();
+  static string descTable(const string& tableName);
+  static vector<string> getAllRowString(const string& tableName);
 };
 
 }  // namespace seeker

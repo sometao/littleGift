@@ -99,14 +99,14 @@ add_executable (${PROJECT_NAME}
   "src/appUitls.cpp"
   "src/main.cpp" 
 	"src/pch.cpp" 
-	"src/tmptest.cpp" 
+	"src/test/tmptest.cpp" 
 	"src/actions.cpp" 
 	"src/pages.cpp" 
-	"src/testActions.cpp" 
+	"src/test/testActions.cpp" 
 	"src/logger.cpp" 
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
- "src/DAO.cpp")
+ "src/DAO.cpp" "src/test/daoTest.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
