@@ -40,6 +40,11 @@ set(LIBCRYPTO_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libcrypto.lib")
 #-------------------------------------
 set(SQLITE3_LIBRARY "${PROJECT_SOURCE_DIR}/lib/sqlite3.lib")
 
+#-------------------------------------
+#  botan lib.
+#-------------------------------------
+set(BOTAN_LIBRARY "${PROJECT_SOURCE_DIR}/lib/botan.lib")
+
 
 
 #-------------------------------------
@@ -89,6 +94,7 @@ message(" ===================== Information ======================")
 message(CMAKE_SOURCE_DIR         	    =  ${CMAKE_SOURCE_DIR})
 message(PROJECT_SOURCE_DIR            =  ${PROJECT_SOURCE_DIR})
 message(ZLIB_LIBRARY                  =  ${ZLIB_LIBRARY})
+message(BOTAN_LIBRARY                 =  ${BOTAN_LIBRARY})
 message(CPPHTTPLIB_ZLIB_SUPPORT       =  ${CPPHTTPLIB_ZLIB_SUPPORT})
 message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
 
@@ -106,7 +112,8 @@ add_executable (${PROJECT_NAME}
 	"src/logger.cpp" 
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
- "src/DAO.cpp" "src/test/daoTest.cpp")
+  "src/DAO.cpp" 
+  "src/test/daoTest.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
@@ -125,6 +132,7 @@ target_link_libraries( ${PROJECT_NAME}
 		${ZLIB_LIBRARY} 
 		${LIBCRYPTO_LIBRARY} 
 		${SQLITE3_LIBRARY} 
+		${BOTAN_LIBRARY} 
 )
 
 
@@ -143,6 +151,9 @@ if(WIN32)
 			$<TARGET_FILE_DIR:${PROJECT_NAME}>
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${PROJECT_SOURCE_DIR}/lib/sqlite3.dll"              
+			$<TARGET_FILE_DIR:${PROJECT_NAME}>
+		COMMAND ${CMAKE_COMMAND} -E copy_if_different
+			"${PROJECT_SOURCE_DIR}/lib/botan.dll"              
 			$<TARGET_FILE_DIR:${PROJECT_NAME}>
 	)
 endif()

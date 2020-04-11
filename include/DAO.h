@@ -16,7 +16,11 @@ struct SlidesRow {
   int64_t create_time;
 };
 
+int64_t addSlides(SlidesRow row);
 
+SlidesRow getSlides(const string& token);
+
+void initContentTable();
 
 }  // namespace dao
 

@@ -5,16 +5,10 @@
 #include <iostream>
 
 namespace littleGift {
-namespace dao {
-
-  void initContentTable();
-  int64_t addSlides(SlidesRow row);
-
-}
-
 
 namespace test {
 
+using namespace littleGift::dao;
 
 
 void testDbInit() {
@@ -25,11 +19,18 @@ void testDbInit() {
 }
 
 void testAddSlides() {
-  D_LOG("test SqliteDB begin.");
+  D_LOG("test testAddSlides begin.");
   using namespace seeker;
   SqliteDB::init(SQLITE_DB_FILE);
-  void initContentTable();
-  D_LOG("test SqliteDB done.");
+
+  initContentTable();
+
+  SlidesRow r{-1, "Tom", "hello content.", "type1", "token001", "code002", 1235l};
+
+  auto id = addSlides(r);
+  I_LOG("add slides done, id = {}", id );
+
+  D_LOG("test testAddSlides done.");
 }
 
 }  // namespace test

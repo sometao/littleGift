@@ -12,6 +12,13 @@ CREATE TABLE IF NOT EXISTS slides(
 );
 
 
+CREATE UNIQUE INDEX slides_tkn_idx on slides (access_token);
+
+
+#for test.
+DROP INDEX index_name;
+
+
 
 
 

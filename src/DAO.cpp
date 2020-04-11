@@ -25,10 +25,10 @@ static int callback1(void* NotUsed, int argc, char** argv, char** azColName) {
   return 0;
 }
 
-//TODO tobe test.
+//TODO to be test.
 int64_t addSlides(SlidesRow row) {
   static const string sql =
-      "insert into students (author_name, content, content_type, access_token, edit_code, "
+      "insert into slides (author_name, content, content_type, access_token, edit_code, "
       "create_time ) values (?, ?, ?, ?, ?, ?);";
 
   D_LOG("addSlides author_name={}, content={} ", row.authorName, row.content);
@@ -39,8 +39,8 @@ int64_t addSlides(SlidesRow row) {
   rc[0] = sqlite3_bind_text(stmt, 1, row.authorName.c_str(), -1, SQLITE_STATIC);
   rc[1] = sqlite3_bind_text(stmt, 2, row.content.c_str(), -1, SQLITE_STATIC);
   rc[2] = sqlite3_bind_text(stmt, 3, row.contentType.c_str(), -1, SQLITE_STATIC);
-  rc[2] = sqlite3_bind_text(stmt, 4, row.accessToken.c_str(), -1, SQLITE_STATIC);
-  rc[2] = sqlite3_bind_text(stmt, 5, row.editCode.c_str(), -1, SQLITE_STATIC);
+  rc[3] = sqlite3_bind_text(stmt, 4, row.accessToken.c_str(), -1, SQLITE_STATIC);
+  rc[4] = sqlite3_bind_text(stmt, 5, row.editCode.c_str(), -1, SQLITE_STATIC);
   rc[5] = sqlite3_bind_int64(stmt, 6, row.create_time);
 
   for (int i = 0; i < 6; i++) {
@@ -77,6 +77,7 @@ CREATE TABLE IF NOT EXISTS slides(
 	access_token	VARCHAR(128)		NOT NULL,
 	edit_code			VARCHAR(128)		NOT NULL,
 	create_time		INTEGER					NOT NULL );
+CREATE UNIQUE INDEX IF NOT EXISTS slides_tkn_idx on slides (access_token);
 )";
 
   string err{};

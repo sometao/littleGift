@@ -31,7 +31,7 @@ class Logger {
     const string defaultLogFile = "./application.log";
     logFileName = logFile.length() > 0 ? logFile : defaultLogFile;
 
-    const string defaultPattern = "[%Y%m%d %H:%M:%S.%e %s:%#] [%^%L%$]: %v";
+    const string defaultPattern = "[%Y%m%d %H:%M:%S.%e %s:%#] %^[%L]%$: %v";
     usePattern = pattern.length() > 0 ? pattern : defaultPattern;
 
     std::cout << "init Logger with pattern: " << usePattern << std::endl;

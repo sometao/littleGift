@@ -22,6 +22,7 @@ extern void testHtmlTemplate();
 extern void testStringSplit();
 extern void testHttpClient();
 extern void testDbInit();
+extern void testAddSlides();
 }  // namespace test
 
 
@@ -31,6 +32,21 @@ extern void testDbInit();
 
 namespace {
 using namespace httplib;
+
+void runTest() {
+
+  try {
+    //for test.
+    I_LOG("runTest begin.");
+    using namespace littleGift::test;
+    testAddSlides();
+    I_LOG("runTest end.");
+
+  } catch (std::runtime_error ex) {
+    W_LOG("RUNTIME ERROR: {}", ex.what());
+  }
+
+}
 
 void startServer(Server& svr, const char* host, int port) {
   I_LOG("starting server {}:{}", host, port);
@@ -69,13 +85,7 @@ int launch() {
   return 0;
 }
 
-void runTest() {
-  //for test.
-  I_LOG("runTest begin.");
-  using namespace littleGift::test;
-  testDbInit();
-  I_LOG("runTest end.");
-}
+
 
 }  // namespace
 

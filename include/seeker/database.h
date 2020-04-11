@@ -69,7 +69,7 @@ class SqliteDB {
     auto& ins = getInstence();
     if (sqlite3_prepare_v2(ins.dbHandle, sql.c_str(), -1, stmt, nullptr) != SQLITE_OK) {
       string errMsg =
-          fmt::format("Prepare SQL [{}] error: {}", sql, sqlite3_errmsg(ins.dbHandle));
+          fmt::format("Prepare SQL [{}], Error: {}", sql, sqlite3_errmsg(ins.dbHandle));
       W_LOG(errMsg);
       throw std::runtime_error(errMsg);
     }
