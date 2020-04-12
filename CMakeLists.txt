@@ -93,10 +93,25 @@ message(" ===================== Information ======================")
 
 message(CMAKE_SOURCE_DIR         	    =  ${CMAKE_SOURCE_DIR})
 message(PROJECT_SOURCE_DIR            =  ${PROJECT_SOURCE_DIR})
+message(CMAKE_BUILD_TYPE              =  ${CMAKE_BUILD_TYPE})
 message(ZLIB_LIBRARY                  =  ${ZLIB_LIBRARY})
 message(BOTAN_LIBRARY                 =  ${BOTAN_LIBRARY})
 message(CPPHTTPLIB_ZLIB_SUPPORT       =  ${CPPHTTPLIB_ZLIB_SUPPORT})
 message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
+
+
+if(CMAKE_BUILD_TYPE MATCHES "Debug")
+    message( "CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}")
+		set(BUILD_DEBUG 1)
+elseif(CMAKE_BUILD_TYPE MATCHES "Release" 
+	OR CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo"
+	OR CMAKE_BUILD_TYPE MATCHES "MinSizeRel" ) 
+		message("CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}")
+		set(BUILD_DEBUG 0)
+else()
+    message(WARNING "unknown CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}, try build RELEASE.")
+		set(BUILD_DEBUG 0)
+endif()
 
 
 # Add source to this project's executable.
@@ -113,7 +128,7 @@ add_executable (${PROJECT_NAME}
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
   "src/DAO.cpp" 
-  "src/test/daoTest.cpp")
+  "src/test/daoTest.cpp" "src/test/dotanTest.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
@@ -138,7 +153,7 @@ target_link_libraries( ${PROJECT_NAME}
 
 if(WIN32)
     # Copy DLL files to output directory
-	message("COPY ZLIB DLL")
+	message("COPY DLLs TO target path.")
 	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${PROJECT_SOURCE_DIR}/lib/zlibwapi.dll"              
@@ -152,10 +167,24 @@ if(WIN32)
 		COMMAND ${CMAKE_COMMAND} -E copy_if_different
 			"${PROJECT_SOURCE_DIR}/lib/sqlite3.dll"              
 			$<TARGET_FILE_DIR:${PROJECT_NAME}>
-		COMMAND ${CMAKE_COMMAND} -E copy_if_different
-			"${PROJECT_SOURCE_DIR}/lib/botan.dll"              
-			$<TARGET_FILE_DIR:${PROJECT_NAME}>
 	)
+
+	if(BUILD_DEBUG)
+		  message("BUILD_RELEASE on")
+			add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+					"${PROJECT_SOURCE_DIR}/lib/debug/botan.dll"              
+					$<TARGET_FILE_DIR:${PROJECT_NAME}>
+			)
+	else()
+	    message("BUILD_RELEASE off")
+    	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+					"${PROJECT_SOURCE_DIR}/lib/release/botan.dll"              
+					$<TARGET_FILE_DIR:${PROJECT_NAME}>
+			)
+	endif()
+
 endif()
 
 # Copy resource dir to output directory

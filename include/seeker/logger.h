@@ -99,8 +99,8 @@ class Logger {
     std::cout << "Logger has been shutdown." << std::endl;
   };
 
-  static void init(const string& logFile = "", bool stdOutOn = true, bool fileOutOn = true,
-                   const string& pattern = "", bool useAsyn = true) {
+  static void init(const string& logFile = "", bool useAsyn = true, bool stdOutOn = true, bool fileOutOn = true,
+                   const string& pattern = "") {
     static bool inited = false;
     if (!inited) {
       static Logger instence{logFile, stdOutOn, fileOutOn, pattern, useAsyn};

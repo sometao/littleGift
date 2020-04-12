@@ -23,6 +23,7 @@ extern void testStringSplit();
 extern void testHttpClient();
 extern void testDbInit();
 extern void testAddSlides();
+extern void hashTest();
 }  // namespace test
 
 
@@ -39,7 +40,7 @@ void runTest() {
     //for test.
     I_LOG("runTest begin.");
     using namespace littleGift::test;
-    testAddSlides();
+    hashTest();
     I_LOG("runTest end.");
 
   } catch (std::runtime_error ex) {
@@ -93,7 +94,7 @@ int launch() {
 
 
 int main() {
-  seeker::Logger::init(LOG_FILE_NAME);
+  seeker::Logger::init(LOG_FILE_NAME, false);
   //launch();
 
   runTest();
