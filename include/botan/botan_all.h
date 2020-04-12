@@ -30,10 +30,10 @@
 
 /*
 * This file was automatically generated running
-* 'configure.py --cc=msvc --cpu=x86_64 --os=windows --minimized-build --debug-mode --amalgamation --enable-modules=md5,sha1,sha1_sse2,hash,hash_id,hex,rng,rsa,aes,base64,system_rng,uuid,des'
+* 'configure.py --cc=msvc --cpu=x86_64 --os=windows --minimized-build --amalgamation --enable-modules=md5,sha1,sha1_sse2,sha2_64,sha2_64_bmi2,sha3,sha3_bmi2,hash,hash_id,hex,rng,rsa,aes,base64,system_rng,uuid,des'
 *
 * Target
-*  - Compiler: cl  /EHs /GR /D_ENABLE_EXTENDED_ALIGNED_STORAGE /MDd /bigobj /Zi /FS
+*  - Compiler: cl  /EHs /GR /D_ENABLE_EXTENDED_ALIGNED_STORAGE /MD /bigobj /O2 /Oi
 *  - Arch: x86_64
 *  - OS: windows
 */
@@ -137,6 +137,8 @@
 #define BOTAN_HAS_SHA1 20131128
 #define BOTAN_HAS_SHA1_SSE2 20160803
 #define BOTAN_HAS_SHA2_32 20131128
+#define BOTAN_HAS_SHA2_64 20131128
+#define BOTAN_HAS_SHA3 20161018
 #define BOTAN_HAS_SYSTEM_RNG 20141202
 #define BOTAN_HAS_UTIL_FUNCTIONS 20180903
 #define BOTAN_HAS_UUID 20180930
@@ -11402,6 +11404,216 @@ class BOTAN_PUBLIC_API(2,0) SHA_256 final : public MDx_HashFunction
       void copy_out(uint8_t[]) override;
 
       secure_vector<uint32_t> m_digest;
+   };
+
+}
+
+BOTAN_FUTURE_INTERNAL_HEADER(sha2_64.h)
+
+namespace Botan {
+
+/**
+* SHA-384
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_384 final : public MDx_HashFunction
+   {
+   public:
+      std::string name() const override { return "SHA-384"; }
+      size_t output_length() const override { return 48; }
+      HashFunction* clone() const override { return new SHA_384; }
+      std::unique_ptr<HashFunction> copy_state() const override;
+      std::string provider() const override;
+
+      void clear() override;
+
+      SHA_384() : MDx_HashFunction(128, true, true, 16), m_digest(8)
+         { clear(); }
+   private:
+      void compress_n(const uint8_t[], size_t blocks) override;
+      void copy_out(uint8_t[]) override;
+
+      secure_vector<uint64_t> m_digest;
+   };
+
+/**
+* SHA-512
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_512 final : public MDx_HashFunction
+   {
+   public:
+      std::string name() const override { return "SHA-512"; }
+      size_t output_length() const override { return 64; }
+      HashFunction* clone() const override { return new SHA_512; }
+      std::unique_ptr<HashFunction> copy_state() const override;
+      std::string provider() const override;
+
+      void clear() override;
+
+      /*
+      * Perform a SHA-512 compression. For internal use
+      */
+      static void compress_digest(secure_vector<uint64_t>& digest,
+                                  const uint8_t input[],
+                                  size_t blocks);
+
+      SHA_512() : MDx_HashFunction(128, true, true, 16), m_digest(8)
+         { clear(); }
+   private:
+      void compress_n(const uint8_t[], size_t blocks) override;
+      void copy_out(uint8_t[]) override;
+
+      static const uint64_t K[80];
+
+#if defined(BOTAN_HAS_SHA2_64_BMI2)
+      static void compress_digest_bmi2(secure_vector<uint64_t>& digest,
+                                       const uint8_t input[],
+                                       size_t blocks);
+#endif
+
+      secure_vector<uint64_t> m_digest;
+   };
+
+/**
+* SHA-512/256
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_512_256 final : public MDx_HashFunction
+   {
+   public:
+      std::string name() const override { return "SHA-512-256"; }
+      size_t output_length() const override { return 32; }
+      HashFunction* clone() const override { return new SHA_512_256; }
+      std::unique_ptr<HashFunction> copy_state() const override;
+      std::string provider() const override;
+
+      void clear() override;
+
+      SHA_512_256() : MDx_HashFunction(128, true, true, 16), m_digest(8) { clear(); }
+   private:
+      void compress_n(const uint8_t[], size_t blocks) override;
+      void copy_out(uint8_t[]) override;
+
+      secure_vector<uint64_t> m_digest;
+   };
+
+}
+
+BOTAN_FUTURE_INTERNAL_HEADER(sha3.h)
+
+namespace Botan {
+
+/**
+* SHA-3
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_3 : public HashFunction
+   {
+   public:
+
+      /**
+      * @param output_bits the size of the hash output; must be one of
+      *                    224, 256, 384, or 512
+      */
+      explicit SHA_3(size_t output_bits);
+
+      size_t hash_block_size() const override { return m_bitrate / 8; }
+      size_t output_length() const override { return m_output_bits / 8; }
+
+      HashFunction* clone() const override;
+      std::unique_ptr<HashFunction> copy_state() const override;
+      std::string name() const override;
+      void clear() override;
+      std::string provider() const override;
+
+      // Static functions for internal usage
+
+      /**
+      * Absorb data into the provided state
+      * @param bitrate the bitrate to absorb into the sponge
+      * @param S the sponge state
+      * @param S_pos where to begin absorbing into S
+      * @param input the input data
+      * @param length size of input in bytes
+      */
+      static size_t absorb(size_t bitrate,
+                           secure_vector<uint64_t>& S, size_t S_pos,
+                           const uint8_t input[], size_t length);
+
+      /**
+      * Add final padding and permute. The padding is assumed to be
+      * init_pad || 00... || fini_pad
+      *
+      * @param bitrate the bitrate to absorb into the sponge
+      * @param S the sponge state
+      * @param S_pos where to begin absorbing into S
+      * @param init_pad the leading pad bits
+      * @param fini_pad the final pad bits
+      */
+      static void finish(size_t bitrate,
+                         secure_vector<uint64_t>& S, size_t S_pos,
+                         uint8_t init_pad, uint8_t fini_pad);
+
+      /**
+      * Expand from provided state
+      * @param bitrate sponge parameter
+      * @param S the state
+      * @param output the output buffer
+      * @param output_length the size of output in bytes
+      */
+      static void expand(size_t bitrate,
+                         secure_vector<uint64_t>& S,
+                         uint8_t output[], size_t output_length);
+
+      /**
+      * The bare Keccak-1600 permutation
+      */
+      static void permute(uint64_t A[25]);
+
+   private:
+      void add_data(const uint8_t input[], size_t length) override;
+      void final_result(uint8_t out[]) override;
+
+#if defined(BOTAN_HAS_SHA3_BMI2)
+      static void permute_bmi2(uint64_t A[25]);
+#endif
+
+      size_t m_output_bits, m_bitrate;
+      secure_vector<uint64_t> m_S;
+      size_t m_S_pos;
+   };
+
+/**
+* SHA-3-224
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_3_224 final : public SHA_3
+   {
+   public:
+      SHA_3_224() : SHA_3(224) {}
+   };
+
+/**
+* SHA-3-256
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_3_256 final : public SHA_3
+   {
+   public:
+      SHA_3_256() : SHA_3(256) {}
+   };
+
+/**
+* SHA-3-384
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_3_384 final : public SHA_3
+   {
+   public:
+      SHA_3_384() : SHA_3(384) {}
+   };
+
+/**
+* SHA-3-512
+*/
+class BOTAN_PUBLIC_API(2,0) SHA_3_512 final : public SHA_3
+   {
+   public:
+      SHA_3_512() : SHA_3(512) {}
    };
 
 }

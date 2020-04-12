@@ -8,6 +8,7 @@
 //#include <botan/parsing.h>
 //#include <botan/hex.h>
 //#include <botan/base64.h>
+#include "seeker/secure.h"
 #include "botan/botan_all.h"
 
 #include <functional>
@@ -18,6 +19,10 @@
 
 namespace littleGift {
 namespace test {
+
+  using std::string;
+  using std::cout;
+  using std::endl;
 
 void do_read_file(std::istream& in, std::function<void(uint8_t[], size_t)> consumer_fn,
                   size_t buf_size) {
@@ -91,12 +96,10 @@ std::string format_blob(const std::string& format, const std::vector<uint8_t, Al
 }
 
 
-void hashTest() {
-  std::cout << "" << std::endl;
-  I_LOG("test hash begin.");
+void md5Base(const std::string& target) {
   const std::string hash_algo = "MD5";
   const std::string format = "hex";  //"base64"
-  //const std::string fsname = "";
+                                     //const std::string fsname = "";
   const size_t buf_size = 4096;
   std::unique_ptr<Botan::HashFunction> hash_fn(Botan::HashFunction::create(hash_algo));
 
@@ -113,7 +116,7 @@ void hashTest() {
   auto update_hash = [&](const uint8_t b[], size_t l) { hash_fn->update(b, l); };
   T_LOG("hashTest [2] ----------------");
   //read_file(fsname, update_hash, buf_size);
-  std::string target = "aaabbbcccdddeeefff";
+
   T_LOG("hashTest [3] ----------------");
   read_string(target, update_hash, buf_size);
   T_LOG("hashTest [4] ----------------");
@@ -123,6 +126,34 @@ void hashTest() {
 
   I_LOG("target string: {}", target );
   I_LOG("digest {} string: {}", format, digest );
+}
+
+
+void seekerMd5(const std::string& target) {
+
+  auto digest = seeker::Secure::md5(target, 1024);
+  I_LOG("target string: {}", target );
+  I_LOG("digest string: {}", digest );
+}
+
+void seekerSHA256(const std::string& target) {
+
+  auto digest = seeker::Secure::sha256(target, 1024);
+  I_LOG("seekerSHA256 target string: {}", target );
+  I_LOG("seekerSHA256 digest string: {}", digest );
+}
+
+void hashTest() {
+  std::cout << "" << std::endl;
+  I_LOG("test hash begin.");
+
+  string target = "aaabbbcccddedf";
+  //md5Base(target);
+  I_LOG("====================================================");
+  //seekerMd5(target);
+  seekerSHA256(target);
+
+  
 
   I_LOG("test hash end.");
 
