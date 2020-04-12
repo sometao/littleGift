@@ -3,7 +3,7 @@
 
 /*
 * This file was automatically generated running
-* 'configure.py --cc=msvc --cpu=x86_64 --os=windows --minimized-build --amalgamation --enable-modules=md5,sha1,sha1_sse2,sha2_64,sha2_64_bmi2,sha3,sha3_bmi2,hash,hash_id,hex,rng,rsa,aes,base64,system_rng,uuid,des'
+* 'configure.py --cc=msvc --cpu=x86_64 --os=windows --minimized-build --enable-modules=md5,sha1,sha1_sse2,sha2_64,sha2_64_bmi2,sha3,sha3_bmi2,hash,hash_id,hex,rng,rsa,aes,base64,system_rng,uuid,des'
 *
 * Target
 *  - Compiler: cl  /EHs /GR /D_ENABLE_EXTENDED_ALIGNED_STORAGE /MD /bigobj /O2 /Oi

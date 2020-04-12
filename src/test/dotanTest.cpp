@@ -1,15 +1,5 @@
 #include "littleGift.h"
-//#include "botan/botan.h"
-//#include "botan/hash.h"
-//#include "botan/md5.h"
-//#include "botan/alg_id.h"
-//
-//#include <botan/rng.h>
-//#include <botan/parsing.h>
-//#include <botan/hex.h>
-//#include <botan/base64.h>
 #include "seeker/secure.h"
-#include "botan/botan_all.h"
 
 #include <functional>
 #include <iostream>
@@ -68,12 +58,6 @@ std::string format_blob(const std::string& format, const uint8_t bits[], size_t 
 #if defined(BOTAN_HAS_HEX_CODEC)
   if (format == "hex") {
     return Botan::hex_encode(bits, len);
-  }
-#endif
-
-#if defined(BOTAN_HAS_BASE64_CODEC)
-  if (format == "base64") {
-    return Botan::base64_encode(bits, len);
   }
 #endif
 

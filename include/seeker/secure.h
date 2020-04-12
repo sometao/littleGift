@@ -1,6 +1,9 @@
 #pragma once
 #include "seeker/logger.h"
-#include "botan/botan_all.h"
+#include "botan/botan.h"
+#include "botan/sha2_32.h"
+#include "botan/md5.h"
+#include "botan/hex.h"
 #include <string>
 #include <sstream>
 
@@ -17,8 +20,8 @@ class Secure {
 
   static Botan::secure_vector<Botan::byte> process(Botan::MDx_HashFunction& hashFunction,
                                                    const string& target,
-                                                   size_t bufSize = 4096) {
-    if (bufSize > 0) {
+                                                   size_t bufSize) {
+    if (bufSize > 0 || target.length() > 8192) {
       std::vector<uint8_t> buf(bufSize < 32 ? 4096 : bufSize);
       std::stringstream ss{target};
       while (ss.good()) {
@@ -33,7 +36,7 @@ class Secure {
     }
   };
 
-  static string sha256(const string& target, size_t bufSize = 4096) {
+  static string sha256(const string& target, size_t bufSize = 0) {
     Botan::SHA_256 sha256;
     Botan::MD5 md5;
     auto rst = process(sha256, target, bufSize);
