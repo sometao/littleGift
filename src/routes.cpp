@@ -25,7 +25,7 @@ extern Handler helloJson;
 extern Handler jsonReqTest;
 extern Handler editor;
 extern Handler result;
-extern Handler saveSlices;
+extern Handler saveSlides;
 }  // namespace actions
 
 
@@ -54,7 +54,7 @@ void setRoutes(httplib::Server& server) {
 
   server.Get("/result", actions::result);
 
-  server.Post("/saveSlices", actions::saveSlices);
+  server.Post("/saveSlides", actions::saveSlides);
 
 
 }

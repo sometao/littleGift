@@ -127,6 +127,13 @@ void seekerSHA256(const std::string& target) {
   I_LOG("seekerSHA256 digest string: {}", digest );
 }
 
+void seekerSHA1(const std::string& target) {
+
+  auto digest = seeker::Secure::sha1(target, 1024);
+  I_LOG("seekerSHA1 target string: {}", target );
+  I_LOG("seekerSHA1 digest string: {}", digest );
+}
+
 void hashTest() {
   std::cout << "" << std::endl;
   I_LOG("test hash begin.");
@@ -134,8 +141,9 @@ void hashTest() {
   string target = "aaabbbcccddedf";
   //md5Base(target);
   I_LOG("====================================================");
-  //seekerMd5(target);
+  seekerMd5(target);
   seekerSHA256(target);
+  seekerSHA1(target);
 
   
 

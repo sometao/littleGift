@@ -4,6 +4,9 @@
 #include <string>
 #include "httpUtils.h"
 #include "htmlTemplate.h"
+#include "seeker/secure.h"
+#include "seeker/common.h"
+#include "dao.h"
 
 namespace littleGift {
 using std::cout;
@@ -29,7 +32,8 @@ Handler editor = [](const Request& req, Response& res) {
   res.set_content(pages::editor(), httpUtils::contentType::html);
 };
 
-Handler saveSlices = [&](const Request& req, Response& res) {
+// TODO to be test
+Handler saveSlides = [](const Request& req, Response& res) {
   D_LOG("files size = {}", req.files.size());
   D_LOG("body = {}", req.body);
 
@@ -40,29 +44,36 @@ Handler saveSlices = [&](const Request& req, Response& res) {
 
   auto files = req.files;
   for (auto& f : files) {
-    D_LOG("saveSlices file:  {} = {}, {}", f.first, f.second.filename, f.second.name);
+    D_LOG("saveSlides file:  {} = {}, {}", f.first, f.second.filename, f.second.name);
   }
 
   if (req.has_file("mdContent")) {
     const auto& value = req.get_file_value("mdContent");
+
     auto mdContent = value.content;
+    string author = req.has_file("author") ? req.get_file_value("author").content : "";
+    auto timestamp = seeker::Time::currentTime();
+    string token = seeker::Secure::md5(mdContent + std::to_string(timestamp));
+    token = seeker::String::toLower(token);
+    string code = seeker::Secure::randomString(6);
 
-    T_LOG("saveSlices: mdContent={}", mdContent);
+    dao::SlidesRow row{-1, author, mdContent, "", token, code, timestamp};
+    auto id = dao::addSlides(row);
 
-    stringstream result;
-    result << "got you slices." << endl;
-    result << "mdContent:\n" << mdContent;
-    T_LOG("result:{}", result.str());
-    cout << "结果：" << result.str() << endl;
-    //res.set_content(result.str(), httpUtils::contentType::plain);
-    
-    res.status = 301;
-    res.headers.insert({"Location", "/result"});
+    I_LOG("Slide added: mdContent={}, author={}, token={}, code={}, timestamp={}",
+          mdContent.substr(0, 16) + "..",
+          author,
+          token,
+          code,
+          timestamp);
 
+    res.status = 303;
+    res.headers.insert({"Location", "/result?token=" + token});
 
   } else {
     W_LOG("req.has_file(\"mdContent\") error");
-    res.status = 404;
+    res.status = 200;
+    res.set_content("markdown content can not be empty.", httpUtils::contentType::plain);
   }
 };
 

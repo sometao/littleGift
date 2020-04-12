@@ -25,7 +25,6 @@ static int callback1(void* NotUsed, int argc, char** argv, char** azColName) {
   return 0;
 }
 
-//TODO to be test.
 int64_t addSlides(SlidesRow row) {
   static const string sql =
       "insert into slides (author_name, content, content_type, access_token, edit_code, "
