@@ -8,6 +8,8 @@
 #include <string>
 #include <sstream>
 #include "seeker/common.h"
+#include <random>
+
 namespace seeker {
 using std::string;
 
@@ -16,7 +18,7 @@ class Secure {
   static auto uniformIntDistribution(int min, int max, int seed = INT_MIN) {
     static std::random_device rd;
     static std::mt19937 gen{seed == INT_MIN ? rd() : seed};
-    static std::uniform_int_distribution<> dis(min, max);
+    static std::uniform_int_distribution<> dis(min, max - 1);
     auto func = [] { return dis(gen); };
     return func;
   };
@@ -38,7 +40,7 @@ class Secure {
     return charMap;
   }
 
-  static string randomString(size_t len) {
+  static string randomChars(size_t len) {
     static auto dic = getCharMap();
     static auto rng = uniformIntDistribution(0, 10 + 26 + 26, Time::currentTime() % INT_MAX);
     string out{};

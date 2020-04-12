@@ -128,7 +128,7 @@ add_executable (${PROJECT_NAME}
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
   "src/dao.cpp" 
-  "src/test/daoTest.cpp" "src/test/dotanTest.cpp")
+  "src/test/daoTest.cpp" "src/test/dotanTest.cpp" "src/test/secureTest.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  

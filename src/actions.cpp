@@ -55,7 +55,7 @@ Handler saveSlides = [](const Request& req, Response& res) {
     auto timestamp = seeker::Time::currentTime();
     string token = seeker::Secure::md5(mdContent + std::to_string(timestamp));
     token = seeker::String::toLower(token);
-    string code = seeker::Secure::randomString(6);
+    string code = seeker::Secure::randomChars(6);
 
     dao::SlidesRow row{-1, author, mdContent, "", token, code, timestamp};
     auto id = dao::addSlides(row);

@@ -24,6 +24,8 @@ extern void testHttpClient();
 extern void testDbInit();
 extern void testAddSlides();
 extern void hashTest();
+extern void testRandomInt();
+extern void testRandomeStr();
 }  // namespace test
 
 
@@ -40,7 +42,7 @@ void runTest() {
     //for test.
     I_LOG("runTest begin.");
     using namespace littleGift::test;
-    hashTest();
+    testRandomeStr();
     I_LOG("runTest end.");
 
   } catch (std::runtime_error ex) {
