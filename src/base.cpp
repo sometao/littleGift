@@ -17,7 +17,7 @@ httplib::Logger baseLogger = [](const Request& req, const Response& res) {
 };
 
 void config(httplib::Server& server) {
-  server.set_logger(baseLogger);
+  //server.set_logger(baseLogger);
   server.set_error_handler(errorHandler);
 }
 

@@ -11,7 +11,7 @@
 #include <iterator>
 
 #ifndef HTML_TEMPLATE_DIR
-#define HTML_TEMPLATE_DIR "./resource/htmlTemplate/"
+#define HTML_TEMPLATE_DIR "./resources/htmlTemplate/"
 #endif  // !HTML_TEMPLATE_DIR
 
 namespace httpTemplate {
@@ -103,7 +103,7 @@ class Engine {
 
   std::unordered_map<string, std::shared_ptr<HtmlTemplate>> templateMap{};
   static Engine& getInstance() {
-    static Engine instance;
+    static Engine instance{};
     return instance;
   }
 

@@ -1,8 +1,10 @@
 #pragma once
 #include "httplib.h"
 #include <iostream>
+#include <string>
 namespace httpUtils {
 
+using std::string;
 using std::cout;
 using std::endl;
 
@@ -17,14 +19,16 @@ using namespace httplib;
 
 using FrontHandler = std::function<bool(const Request&, Response&)>;
 
-using Handler = std::function<void(const Request&, Response&)>;
+using Handler = Server::Handler;
 
-extern Handler insertFrontAction(const FrontHandler front, const Handler action);
+Handler insertFrontAction(const FrontHandler front, const Handler action);
 
-extern Handler JsonReqAction1(Handler action);
+Handler JsonReqAction1(Handler action);
 
-extern bool jsonCheck(const Request& req, Response& res);
+bool jsonCheck(const Request& req, Response& res);
 
-extern Handler JsonReqAction(Handler action);
+Handler JsonReqAction(Handler action);
+
+Handler baseAction(const string& actionName, Handler action);
 
 }  // namespace httplib

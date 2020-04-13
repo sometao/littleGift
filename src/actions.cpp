@@ -27,13 +27,14 @@ namespace actions {
 
 using namespace httplib;
 using Handler = Server::Handler;
+using httpUtils::baseAction;
 
-Handler editor = [](const Request& req, Response& res) {
+Handler editor = baseAction("editor", [](const Request& req, Response& res) {
   res.set_content(pages::editor(), httpUtils::contentType::html);
-};
+});
 
 // TODO to be test
-Handler saveSlides = [](const Request& req, Response& res) {
+Handler saveSlides = baseAction("editor", [](const Request& req, Response& res) {
   D_LOG("files size = {}", req.files.size());
   D_LOG("body = {}", req.body);
 
@@ -75,11 +76,11 @@ Handler saveSlides = [](const Request& req, Response& res) {
     res.status = 200;
     res.set_content("markdown content can not be empty.", httpUtils::contentType::plain);
   }
-};
+});
 
-Handler result = [](const Request& req, Response& res) {
+Handler result = baseAction("editor",[](const Request& req, Response& res) {
   res.set_content(pages::result("Tom", "#lala\n- aaa\n- bbb"), httpUtils::contentType::html);
-};
+});
 
 }  // namespace actions
 

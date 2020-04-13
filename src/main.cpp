@@ -53,7 +53,13 @@ void runTest() {
 
 void startServer(Server& svr, const char* host, int port) {
   I_LOG("starting server {}:{}", host, port);
+  try {
   svr.listen(host, port, 0);
+  } catch (std::runtime_error ex) {
+    E_LOG("startServer runtime_error: {}", ex.what());
+  } catch(...) {
+    E_LOG("startServer unknown error.");
+  }
   W_LOG("Server thread exited.");
 }
 
@@ -79,7 +85,7 @@ int launch() {
   I_LOG("SERVER STARTED: {}:{}", interface, port);
 
   while (svr.is_running()) {
-    std::this_thread::sleep_for(std::chrono::seconds(5));
+    std::this_thread::sleep_for(std::chrono::seconds(30));
     T_LOG("Server is running");
   }
 
@@ -97,8 +103,8 @@ int launch() {
 
 int main() {
   seeker::Logger::init(LOG_FILE_NAME, false);
-  //launch();
+  launch();
 
-  runTest();
+  //runTest();
 }
 
