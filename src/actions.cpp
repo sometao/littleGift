@@ -17,7 +17,7 @@ using std::stringstream;
 namespace pages {
 
 extern const string editor();
-extern const string result(const string& name, const string& code);
+extern const string result(std::shared_ptr<dao::SlidesRow> row);
 
 }  // namespace pages
 
@@ -29,24 +29,29 @@ using namespace httplib;
 using Handler = Server::Handler;
 using httpUtils::baseAction;
 
+Handler root = baseAction("root", [](const Request& req, Response& res) {
+  res.set_redirect("/editor");
+});
+
+
 Handler editor = baseAction("editor", [](const Request& req, Response& res) {
   res.set_content(pages::editor(), httpUtils::contentType::html);
 });
 
 // TODO to be test
-Handler saveSlides = baseAction("editor", [](const Request& req, Response& res) {
-  D_LOG("files size = {}", req.files.size());
-  D_LOG("body = {}", req.body);
+Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& res) {
+  //D_LOG("files size = {}", req.files.size());
+  //D_LOG("body = {}", req.body);
 
-  auto it = req.headers.find("Content-Type");
-  if (it != req.headers.end()) {
-    D_LOG("Content-Type = {}: {}", it->first, it->second);
-  }
+  //auto it = req.headers.find("Content-Type");
+  //if (it != req.headers.end()) {
+  //  D_LOG("Content-Type = {}: {}", it->first, it->second);
+  //}
 
-  auto files = req.files;
-  for (auto& f : files) {
-    D_LOG("saveSlides file:  {} = {}, {}", f.first, f.second.filename, f.second.name);
-  }
+  //auto files = req.files;
+  //for (auto& f : files) {
+  //  D_LOG("saveSlides file:  {} = {}, {}", f.first, f.second.filename, f.second.name);
+  //}
 
   if (req.has_file("mdContent")) {
     const auto& value = req.get_file_value("mdContent");
@@ -72,15 +77,28 @@ Handler saveSlides = baseAction("editor", [](const Request& req, Response& res) 
     res.headers.insert({"Location", "/result?token=" + token});
 
   } else {
-    W_LOG("req.has_file(\"mdContent\") error");
+    W_LOG("can not fine [mdContent] error in request form.");
     res.status = 200;
     res.set_content("markdown content can not be empty.", httpUtils::contentType::plain);
   }
 });
 
-Handler result = baseAction("editor",[](const Request& req, Response& res) {
-  res.set_content(pages::result("Tom", "#lala\n- aaa\n- bbb"), httpUtils::contentType::html);
+Handler result = baseAction("result",[](const Request& req, Response& res) {
+
+  if (req.has_param("token")) {
+    auto token = req.get_param_value("token");
+    I_LOG("get result for token={}", token);
+    auto row = dao::getSlides(token);
+    res.set_content(pages::result(row), httpUtils::contentType::html);
+  } else {
+    res.set_redirect("/");
+  }
+
 });
+
+
+
+
 
 }  // namespace actions
 

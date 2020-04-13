@@ -1,4 +1,5 @@
 #include "littleGift.h"
+#include "seeker/common.h"
 #include "seeker/database.h"
 #include <iostream>
 #include <string>
@@ -66,27 +67,37 @@ void startServer(Server& svr, const char* host, int port) {
 int launch() {
 
   using namespace httplib;
-  cout << "STARTED." << endl;
+
+  seeker::SqliteDB::init( SQLITE_DB_FILE );
 
   auto interface = "0.0.0.0";
   auto port = 50080;
-
   Server svr;
-  littleGift::setRoutes(svr);
-  littleGift::config(svr);
-  std::thread serverThread{ startServer, std::ref(svr), interface, port };
-  serverThread.detach();
 
-  int counter = 60;
-  while (!svr.is_running() && --counter > 0) {
-    std::this_thread::sleep_for(std::chrono::milliseconds(50));
+  try {
+    littleGift::setRoutes(svr);
+    littleGift::config(svr);
+    std::thread serverThread{ startServer, std::ref(svr), interface, port };
+    serverThread.detach();
+
+    int counter = 60;
+    while (!svr.is_running() && --counter > 0) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+
+  } catch(std::runtime_error ex) {
+    E_LOG("server init error: {}", ex.what());
+    return 1;
+  } catch(...) {
+    E_LOG("server init unknown error");
+    return 1;
   }
 
   I_LOG("SERVER STARTED: {}:{}", interface, port);
-
+  auto startTime = seeker::Time::currentTime();
   while (svr.is_running()) {
-    std::this_thread::sleep_for(std::chrono::seconds(30));
-    T_LOG("Server is running");
+    std::this_thread::sleep_for(std::chrono::seconds(15));
+    T_LOG("Server is running {} seconds", (seeker::Time::currentTime() - startTime) / 1000);
   }
 
   W_LOG("SERVER STOPPED.");

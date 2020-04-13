@@ -1,4 +1,4 @@
-﻿#include "pch.h"
+﻿#include "littleGift.h"
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -26,13 +26,18 @@ extern Handler jsonReqTest;
 extern Handler editor;
 extern Handler result;
 extern Handler saveSlides;
+extern Handler root;
 }  // namespace actions
 
 
 void setRoutes(httplib::Server& server) {
 
+  auto localPublic = "./resources/public";
+  auto webPublic = "/littleGift/public";
 
-  if(server.set_mount_point("/littleGift/public", "./resource/public")){
+
+  I_LOG("mount local path [{}] to web path [{}]", localPublic, webPublic);
+  if (!server.set_mount_point(webPublic, localPublic)) {
     throw std::runtime_error("mount ./public failed.");
   }
 
@@ -50,13 +55,15 @@ void setRoutes(httplib::Server& server) {
 
   server.Post("/jsonReqTest", actions::jsonReqTest);
 
+
+
+  server.Get("/", actions::root);
+
   server.Get("/editor", actions::editor);
 
   server.Get("/result", actions::result);
 
   server.Post("/saveSlides", actions::saveSlides);
-
-
 }
 
 }  // namespace littleGift

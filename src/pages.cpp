@@ -1,8 +1,10 @@
 #include "littleGift.h"
 #include "htmlTemplate.h"
+#include "dao.h"
 #include <iostream>
 #include <string>
 #include <vector>
+#include <memory>
 
 namespace littleGift {
 extern void encodeHTML(char* des, const char* src, int desSize);
@@ -13,6 +15,7 @@ using std::cout;
 using std::endl;
 using std::string;
 
+
 const string editor() {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("editorPage.html");
   static const std::vector<string> emptyArgs{};
@@ -20,9 +23,10 @@ const string editor() {
   return outHtml;
 }
 
-const string result(const string& name, const string& code) {
+const string result( std::shared_ptr<dao::SlidesRow> row) {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("result.html");
-  std::vector<string> args{name, code};
+
+  std::vector<string> args{row->content, row->accessToken, row->editCode, row->authorName, std::to_string(row->createTime)};
   auto outHtml = htmlPattern->genHtml(args);
   return outHtml;
 }

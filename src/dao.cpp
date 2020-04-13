@@ -3,15 +3,17 @@
 #include "seeker/database.h"
 #include <iostream>
 #include <string>
+#include <memory>
 
 namespace littleGift {
-using seeker::SqliteDB;
-using std::cout;
-using std::endl;
-using std::string;
 
 namespace dao {
 
+using seeker::SqliteDB;
+using std::cout;
+using std::endl;
+using std::shared_ptr;
+using std::string;
 
 
 static int callback1(void* NotUsed, int argc, char** argv, char** azColName) {
@@ -25,14 +27,14 @@ static int callback1(void* NotUsed, int argc, char** argv, char** azColName) {
   return 0;
 }
 
-int64_t addSlides(SlidesRow row) {
+int64_t addSlides(const SlidesRow& row) {
   static const string sql =
       "insert into slides (author_name, content, content_type, access_token, edit_code, "
       "create_time ) values (?, ?, ?, ?, ?, ?);";
 
   D_LOG("addSlides author_name={}, content={} ", row.authorName, row.content);
-  sqlite3_stmt* stmt = nullptr;
-  SqliteDB::perpare(sql, &stmt);
+  auto stmtPtr = SqliteDB::perpare(sql);
+  auto stmt = stmtPtr.get();
 
   int rc[6];
   rc[0] = sqlite3_bind_text(stmt, 1, row.authorName.c_str(), -1, SQLITE_STATIC);
@@ -40,7 +42,7 @@ int64_t addSlides(SlidesRow row) {
   rc[2] = sqlite3_bind_text(stmt, 3, row.contentType.c_str(), -1, SQLITE_STATIC);
   rc[3] = sqlite3_bind_text(stmt, 4, row.accessToken.c_str(), -1, SQLITE_STATIC);
   rc[4] = sqlite3_bind_text(stmt, 5, row.editCode.c_str(), -1, SQLITE_STATIC);
-  rc[5] = sqlite3_bind_int64(stmt, 6, row.create_time);
+  rc[5] = sqlite3_bind_int64(stmt, 6, row.createTime);
 
   for (int i = 0; i < 6; i++) {
     if (rc[i] != SQLITE_OK) {
@@ -63,6 +65,48 @@ int64_t addSlides(SlidesRow row) {
     id = SqliteDB::lastInsertRowid();
   }
   return id;
+}
+
+shared_ptr<SlidesRow> getSlides(const string& token) {
+  static const string sql =
+      "select id, author_name, content, content_type, access_token, edit_code, create_time "
+      "from slides where access_token = ?;";
+
+  D_LOG("getSlides token={} ", token);
+
+  auto stmtPtr = SqliteDB::perpare(sql);
+  auto stmt = stmtPtr.get();
+
+  if (sqlite3_bind_text(stmt, 1, token.c_str(), -1, SQLITE_STATIC) != SQLITE_OK) {
+    std::string msg = fmt::format("bind errorCode: token={}", token);
+    E_LOG(msg);
+    throw std::runtime_error(msg);
+  }
+
+  int rc = sqlite3_step(stmt);
+  if (rc == SQLITE_ROW) {
+    shared_ptr<SlidesRow> row = std::make_shared<SlidesRow>();
+
+    row->id = sqlite3_column_int64(stmt, 0);
+    row->authorName = (char*)sqlite3_column_text(stmt, 1);
+    row->content = (char*)sqlite3_column_text(stmt, 2);
+    row->contentType = (char*)sqlite3_column_text(stmt, 3);
+    row->accessToken = (char*)sqlite3_column_text(stmt, 4);
+    row->editCode = (char*)sqlite3_column_text(stmt, 5);
+    row->createTime = sqlite3_column_int64(stmt, 6);
+    return row;
+
+  } else if (rc == SQLITE_DONE) {
+    sqlite3_finalize(stmt);
+    W_LOG("can not getSlides with token={}", token);
+    shared_ptr<SlidesRow> empty{};
+    return empty;
+  } else {
+    std::string msg = fmt::format("getSlides sqlite3_step error[{}] SQL", rc);
+    E_LOG(msg);
+    throw std::runtime_error(msg);
+  }
+
 }
 
 
