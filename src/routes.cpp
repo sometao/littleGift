@@ -27,14 +27,15 @@ extern Handler editor;
 extern Handler result;
 extern Handler saveSlides;
 extern Handler root;
+extern Handler getMd;
+extern Handler gift;
 }  // namespace actions
 
 
 void setRoutes(httplib::Server& server) {
 
-  auto localPublic = "./resources/public";
-  auto webPublic = "/littleGift/public";
-
+  auto localPublic = "./resources/static";
+  auto webPublic = "/littleGift/static";
 
   I_LOG("mount local path [{}] to web path [{}]", localPublic, webPublic);
   if (!server.set_mount_point(webPublic, localPublic)) {
@@ -56,7 +57,6 @@ void setRoutes(httplib::Server& server) {
   server.Post("/jsonReqTest", actions::jsonReqTest);
 
 
-
   server.Get("/", actions::root);
 
   server.Get("/editor", actions::editor);
@@ -64,6 +64,10 @@ void setRoutes(httplib::Server& server) {
   server.Get("/result", actions::result);
 
   server.Post("/saveSlides", actions::saveSlides);
+
+  server.Get("/gift", actions::gift);
+
+  server.Get("/getMd", actions::getMd);
 }
 
 }  // namespace littleGift

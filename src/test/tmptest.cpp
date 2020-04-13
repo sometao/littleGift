@@ -114,7 +114,7 @@ void testStringSplit() {
   // string target = "title,date";
   string target = "";
 
-  auto rst = httpTemplate::StringUtils::split(target, ",");
+  auto rst = seeker::String::split(target, ",");
 
   cout << "size:" << rst.size() << endl;
   for (auto& a : rst) {

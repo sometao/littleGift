@@ -9,6 +9,7 @@
 #include <regex>
 #include <memory>
 #include <iterator>
+#include "seeker/common.h"
 
 #ifndef HTML_TEMPLATE_DIR
 #define HTML_TEMPLATE_DIR "./resources/htmlTemplate/"
@@ -21,37 +22,10 @@ using std::endl;
 using std::string;
 using std::vector;
 
-class StringUtils {
- public:
-  static std::vector<string> split(const string& target, const string& sp) {
-    std::vector<string> rst{};
-    if (target.size() == 0) {
-      return rst;
-    }
-
-    const auto spLen = sp.length();
-    string::size_type pos = 0;
-    auto f = target.find(sp, pos);
-
-    while (f != string::npos) {
-      auto r = target.substr(pos, f - pos);
-      rst.emplace_back(r);
-      pos = f + spLen;
-      f = target.find(sp, pos);
-    }
-    rst.emplace_back(target.substr(pos, target.length()));
-    return rst;
-  }
-
-  static string removeBlanks(const string& target) {
-    static std::regex blankRe{R"(\s+)"};
-    return std::regex_replace(target, blankRe, "");
-  }
-};
 
 class HtmlTemplate {
   static std::regex getRegex(string argName) {
-    // <!--@title-->一些文字内容<!--title@-->
+    // <!--@title[-->一些文字内容<!--]title@-->
     // string regStr = "@\\{\\{" + argName + "\\}\\}.*@";
     // string regStr = "<!--@" + argName + "-->.*<!--" + argName + "@-->";
     // string regStr = "<!--@" + argName + "-->(\n|.)*<!--" + argName + "@-->";
@@ -129,9 +103,9 @@ class Engine {
       if (std::regex_search(ln, sm, argsLineRe)) {
         auto argsStr = sm.str(1);
         // cout << "argsStr:" << argsStr << endl;
-        argsStr = StringUtils::removeBlanks(argsStr);
+        argsStr = seeker::String::removeBlanks(argsStr);
         // cout << "argsStr processed:" << argsStr << endl;
-        args = StringUtils::split(argsStr, ",");
+        args = seeker::String::split(argsStr, ",");
         return true;
       } else {
         return false;

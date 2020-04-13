@@ -25,11 +25,23 @@ const string editor() {
 
 const string result( std::shared_ptr<dao::SlidesRow> row) {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("result.html");
-
   std::vector<string> args{row->content, row->accessToken, row->editCode, row->authorName, std::to_string(row->createTime)};
   auto outHtml = htmlPattern->genHtml(args);
   return outHtml;
 }
+
+
+const string gift(const string& mdUri) {
+  static auto htmlPattern = httpTemplate::Engine::loadTemplate("gift.html");
+  std::vector<string> args{mdUri};
+  auto outHtml = htmlPattern->genHtml(args);
+  return outHtml;
+}
+
+
+
+
+
 
 const string helloPage(string name) {
   static constexpr const int maxLen = 128;

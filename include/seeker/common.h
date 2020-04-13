@@ -1,6 +1,7 @@
 #pragma once
 #include "seeker/logger.h"
 #include <chrono>
+#include <regex>
 
 
 namespace seeker {
@@ -18,7 +19,7 @@ class Time {
 };
 
 class String {
-public:
+ public:
   static string toLower(const string& target) {
     string out{};
     for (auto c : target) {
@@ -33,6 +34,47 @@ public:
       out += ::toupper(c);
     }
     return out;
+  }
+
+ public:
+  static std::vector<string> split(const string& target, const string& sp) {
+    std::vector<string> rst{};
+    if (target.size() == 0) {
+      return rst;
+    }
+
+    const auto spLen = sp.length();
+    string::size_type pos = 0;
+    auto f = target.find(sp, pos);
+
+    while (f != string::npos) {
+      auto r = target.substr(pos, f - pos);
+      rst.emplace_back(r);
+      pos = f + spLen;
+      f = target.find(sp, pos);
+    }
+    rst.emplace_back(target.substr(pos, target.length()));
+    return rst;
+  }
+
+  static string removeBlanks(const string& target) {
+    static std::regex blankRe{R"(\s+)"};
+    return std::regex_replace(target, blankRe, "");
+  }
+
+  static string removeLastEmptyLines(const string& target) {
+    size_t len = target.length();
+    size_t i = len - 1;
+    for (; i > 0; i--) {
+      if (target[i] == '\n') {
+        continue;
+      } else if (target[i] == '\r') {
+        continue;
+      } else {
+        break;
+      }
+    }
+    return target.substr(0, i + 1);
   }
 };
 
