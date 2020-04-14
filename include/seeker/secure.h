@@ -71,22 +71,22 @@ class Secure {
   };
 
   static string sha1(const string& target, size_t bufSize = 0) {
-    Botan::SHA_1 hash;
-    auto rst = process(hash, target, bufSize);
+    Botan::SHA_1 hashFunc;
+    auto rst = process(hashFunc, target, bufSize);
     auto digital = Botan::hex_encode(rst.data(), rst.size());
     return digital;
   }
 
   static string sha256(const string& target, size_t bufSize = 0) {
-    Botan::SHA_256 hash;
-    auto rst = process(hash, target, bufSize);
+    Botan::SHA_256 hashFunc;
+    auto rst = process(hashFunc, target, bufSize);
     auto digital = Botan::hex_encode(rst.data(), rst.size());
     return digital;
   }
 
   static string md5(const string& target, size_t bufSize = 0) {
-    Botan::MD5 hash;
-    auto rst = process(hash, target, bufSize);
+    Botan::MD5 hashFunc;
+    auto rst = process(hashFunc, target, bufSize);
     auto digital = Botan::hex_encode(rst.data(), rst.size());
     return digital;
   }

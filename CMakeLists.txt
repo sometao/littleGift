@@ -78,6 +78,8 @@ endif()
 #-------------------------------------
 if(WIN32)
 	add_definitions(-DZLIB_WINAPI )
+elseIf(UNIX)
+	add_definitions(-Wall)
 endif()
 
 
