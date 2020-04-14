@@ -71,7 +71,7 @@ int launch() {
   seeker::SqliteDB::init( SQLITE_DB_FILE );
 
   auto interface = "0.0.0.0";
-  auto port = 50080;
+  auto port = 50082;
   Server svr;
 
   try {

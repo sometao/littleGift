@@ -29,9 +29,9 @@ include(./.SET_LOCAL_PATH.cmake)
 #-------------------------------------
 #set(ZLIB_LIBRARY "${PROJECT_SOURCE_DIR}/lib/zlibwapi.lib")
 if(WIN32)
-	find_library(ZLIB_LIBRARY zlibwapi)
+	find_library(ZLIB_LIBRARY zlibwapi.lib)
 elseif(UNIX)
-	find_library(ZLIB_LIBRARY libz)
+	find_library(ZLIB_LIBRARY libz.a)
 endif()
 
 
@@ -40,8 +40,15 @@ endif()
 #-------------------------------------
 #set(LIBSSL_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libssl.lib")
 #set(LIBCRYPTO_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libcrypto.lib")
-find_library(LIBSSL_LIBRARY libssl)
-find_library(LIBCRYPTO_LIBRARY libcrypto)
+if(WIN32)
+	find_library(LIBSSL_LIBRARY libssl.lib)
+	find_library(LIBCRYPTO_LIBRARY libcrypto.lib)
+elseif(UNIX)
+	find_library(LIBSSL_LIBRARY libssl.a)
+	find_library(LIBCRYPTO_LIBRARY libcrypto.a)
+endif()
+
+
 
 
 #-------------------------------------
@@ -49,9 +56,9 @@ find_library(LIBCRYPTO_LIBRARY libcrypto)
 #-------------------------------------
 #set(SQLITE3_LIBRARY "${PROJECT_SOURCE_DIR}/lib/sqlite3.lib")
 if(WIN32)
-	find_library(SQLITE3_LIBRARY sqlite3 REQUIRED)
+	find_library(SQLITE3_LIBRARY sqlite3.lib REQUIRED)
 elseif(UNIX)
-	find_library(SQLITE3_LIBRARY libsqlite3 REQUIRED)
+	find_library(SQLITE3_LIBRARY libsqlite3.a REQUIRED)
 endif()
 
 
@@ -60,9 +67,9 @@ endif()
 #-------------------------------------
 #set(BOTAN_LIBRARY "${PROJECT_SOURCE_DIR}/lib/botan.lib")
 if(WIN32)
-	find_library(BOTAN_LIBRARY botan REQUIRED)
+	find_library(BOTAN_LIBRARY botan.lib REQUIRED)
 elseif(UNIX)
-	find_library(BOTAN_LIBRARY libbotan REQUIRED)
+	find_library(BOTAN_LIBRARY libbotan-2.a REQUIRED)
 endif()
 
 
@@ -143,7 +150,6 @@ else()
     message(WARNING "unknown CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}, try build RELEASE.")
 		set(BUILD_DEBUG 0)
 endif()
-
 
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
