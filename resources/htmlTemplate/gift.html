@@ -31,12 +31,36 @@
                data-separator-vertical="^\n\n"
                data-separator-notes="^Note:">
       </section>
+
       <section>Slide 2</section>
+
+      <section data-markdown
+               data-separator="^\n\n\n"
+               data-separator-vertical="^\n\n"
+               data-separator-notes="^Note:">
+        <textarea data-template=data-template>
+## Page title
+A paragraph with some text and a [link](http://hakim.se).
+
+
+### Page0.1
+- a
+- b
+
+
+## Page0.2
+c
+
+--- 
+d 
+	      </textarea>
+      </section>
       <section>Slide 3</section>
       <section>Slide 4</section>
       <section>Slide 5</section>
     </div>
   </div>
+
 
   <script src="/littleGift/static/reveal/js/reveal.js"></script>
 
@@ -49,9 +73,13 @@
       dependencies: [
         { src: '/littleGift/static/reveal/plugin/markdown/marked.js' },
         { src: '/littleGift/static/reveal/plugin/markdown/markdown.js' },
-        { src: '/littleGift/static/reveal/plugin/highlight/highlight.js' },
+        // Zoom in and out with Alt+click
+        { src: '/littleGift/static/reveal/plugin/zoom-js/zoom.js', async: true },
+        { src: '/littleGift/static/reveal/plugin/highlight/highlight.js', async: true },
         { src: '/littleGift/static/reveal/plugin/notes/notes.js', async: true }
       ]
+
+
     });
   </script>
 </body>

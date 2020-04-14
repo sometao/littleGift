@@ -1,8 +1,7 @@
 ﻿# CMakeList.txt : CMake project for helloLibevent, include source and define
 # project specific logic here.
 #
-cmake_minimum_required (VERSION 3.15)
-
+cmake_minimum_required (VERSION 3.10)
 
 project ("littleGift" VERSION 0.3)
 
@@ -17,34 +16,54 @@ set(CMAKE_CXX_FLAGS "-D__STDC_CONSTANT_MACROS")
 
 
 
-IF(MSVC)
+if(MSVC)
     SET(CMAKE_CXX_FLAGS "/EHsc")  # deal with MSVC Warning C4530
-ENDIF(MSVC)
+endif(MSVC)
 
 include(./.SET_LOCAL_PATH.cmake)
+
 
 
 #-------------------------------------
 #  zlib for httplib gzip.
 #-------------------------------------
-set(ZLIB_LIBRARY "${PROJECT_SOURCE_DIR}/lib/zlibwapi.lib")
+#set(ZLIB_LIBRARY "${PROJECT_SOURCE_DIR}/lib/zlibwapi.lib")
+if(WIN32)
+	find_library(ZLIB_LIBRARY zlibwapi)
+elseif(UNIX)
+	find_library(ZLIB_LIBRARY libz)
+endif()
+
 
 #-------------------------------------
 #  openSSL for httplib https.
 #-------------------------------------
-set(LIBSSL_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libssl.lib")
-set(LIBCRYPTO_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libcrypto.lib")
+#set(LIBSSL_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libssl.lib")
+#set(LIBCRYPTO_LIBRARY "${PROJECT_SOURCE_DIR}/lib/libcrypto.lib")
+find_library(LIBSSL_LIBRARY libssl)
+find_library(LIBCRYPTO_LIBRARY libcrypto)
+
 
 #-------------------------------------
 #  sqlite3 lib.
 #-------------------------------------
-set(SQLITE3_LIBRARY "${PROJECT_SOURCE_DIR}/lib/sqlite3.lib")
+#set(SQLITE3_LIBRARY "${PROJECT_SOURCE_DIR}/lib/sqlite3.lib")
+if(WIN32)
+	find_library(SQLITE3_LIBRARY sqlite3 REQUIRED)
+elseif(UNIX)
+	find_library(SQLITE3_LIBRARY libsqlite3 REQUIRED)
+endif()
+
 
 #-------------------------------------
 #  botan lib.
 #-------------------------------------
-set(BOTAN_LIBRARY "${PROJECT_SOURCE_DIR}/lib/botan.lib")
-
+#set(BOTAN_LIBRARY "${PROJECT_SOURCE_DIR}/lib/botan.lib")
+if(WIN32)
+	find_library(BOTAN_LIBRARY botan REQUIRED)
+elseif(UNIX)
+	find_library(BOTAN_LIBRARY libbotan REQUIRED)
+endif()
 
 
 #-------------------------------------
@@ -56,7 +75,9 @@ endif()
 
 
 
-
+#-------------------------------------
+#  Threads
+#-------------------------------------
 find_package(Threads REQUIRED) 
 
 #-------------------------------------
@@ -86,16 +107,26 @@ configure_file(
 )
 
 
+
 ######################################
 #  Information
 ######################################
 message(" ===================== Information ======================")
-
 message(CMAKE_SOURCE_DIR         	    =  ${CMAKE_SOURCE_DIR})
 message(PROJECT_SOURCE_DIR            =  ${PROJECT_SOURCE_DIR})
+message(CMAKE_INCLUDE_PATH            =  ${CMAKE_INCLUDE_PATH})
+message(CMAKE_LIBRARY_PATH            =  ${CMAKE_LIBRARY_PATH})
+message(PROJECT_SOURCE_DIR            =  ${PROJECT_SOURCE_DIR})
 message(CMAKE_BUILD_TYPE              =  ${CMAKE_BUILD_TYPE})
+
+message(" ==================== LIBRARY PATH =====================")
+message(LIBSSL_LIBRARY                =  ${LIBSSL_LIBRARY})
+message(LIBCRYPTO_LIBRARY             =  ${LIBCRYPTO_LIBRARY})
+message(SQLITE3_LIBRARY               =  ${SQLITE3_LIBRARY})
 message(ZLIB_LIBRARY                  =  ${ZLIB_LIBRARY})
 message(BOTAN_LIBRARY                 =  ${BOTAN_LIBRARY})
+
+message(" ===================== SETTING ======================")
 message(CPPHTTPLIB_ZLIB_SUPPORT       =  ${CPPHTTPLIB_ZLIB_SUPPORT})
 message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
 
