@@ -145,6 +145,8 @@ message(LIBCRYPTO_LIBRARY             =  ${LIBCRYPTO_LIBRARY})
 message(SQLITE3_LIBRARY               =  ${SQLITE3_LIBRARY})
 message(ZLIB_LIBRARY                  =  ${ZLIB_LIBRARY})
 message(CMAKE_THREAD_LIBS_INIT		    =  ${CMAKE_THREAD_LIBS_INIT})
+message(CMAKE_DL_LIBS	         		    =  ${CMAKE_DL_LIBS})
+
 
 
 message(" ==================== INCLUDE PATH =====================")
@@ -191,6 +193,7 @@ target_link_libraries( ${PROJECT_NAME}
 		${SQLITE3_LIBRARY} 
 		${BOTAN_LIBRARY} 
 		${CMAKE_THREAD_LIBS_INIT}
+		${CMAKE_DL_LIBS}
 )
 
 
