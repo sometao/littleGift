@@ -76,7 +76,7 @@ endif()
 #-------------------------------------
 #set(BOTAN_LIBRARY "${PROJECT_SOURCE_DIR}/lib/botan.lib")
 
-find_path(BOTAN_INCLUDE_DIR "botan-2/botan/botan.h" REQUIRED)
+find_path(BOTAN_INCLUDE_DIR "botan/botan.h" REQUIRED)
 if(WIN32)
 	find_library(BOTAN_LIBRARY botan.lib REQUIRED)
 elseif(UNIX)
