@@ -99,13 +99,13 @@ class SqliteDB {
                   void* arg1,
                   string& err) {
     auto& ins = getInstence();
-    T_LOG("exec sql: {}.", sql);
+    //T_LOG("exec sql: {}.", sql);
     char* zErrMsg = nullptr;
     int rc = sqlite3_exec(ins.dbHandle, sql.c_str(), callback, arg1, &zErrMsg);
     if (zErrMsg != nullptr) {
       err = zErrMsg;
     }
-    T_LOG("exec rc=[{}] sql : {}.", rc, sql);
+    //T_LOG("exec rc=[{}] sql : {}.", rc, sql);
     return rc;
   }
 

@@ -46,7 +46,7 @@ void setRoutes(httplib::Server& server) {
 
 
   const string localPublic = "./resources/static";
-  const string webPublic = url("static");
+  const string webPublic = url("/static");
 
   I_LOG("mount local path [{}] to web path [{}]", localPublic, webPublic);
   if (!server.set_mount_point(webPublic.c_str(), localPublic.c_str())) {
