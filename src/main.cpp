@@ -18,6 +18,10 @@ namespace littleGift {
 extern void setRoutes(httplib::Server& server);
 extern void config(httplib::Server& server);
 
+namespace dao{
+  void initContentTable();
+}
+
 namespace test {
 extern void testHtmlTemplate();
 extern void testStringSplit();
@@ -75,6 +79,7 @@ int launch() {
   Server svr;
 
   try {
+    littleGift::dao::initContentTable();
     littleGift::setRoutes(svr);
     littleGift::config(svr);
     std::thread serverThread{ startServer, std::ref(svr), interface, port };
