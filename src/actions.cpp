@@ -24,7 +24,7 @@ extern const string gift(const string& mdUri);
 
 }  // namespace pages
 
-
+extern const string baseUrl;
 
 namespace actions {
 
@@ -32,8 +32,11 @@ using namespace httplib;
 using Handler = Server::Handler;
 using httpUtils::baseAction;
 
-Handler root =
-    baseAction("root", [](const Request& req, Response& res) { res.set_redirect("/editor"); });
+Handler root = baseAction("root", [](const Request& req, Response& res) {
+  string path = baseUrl + "/editor";
+  W_LOG("root: {}", path);
+  res.set_redirect(path.c_str());
+});
 
 
 Handler editor = baseAction("editor", [](const Request& req, Response& res) {
@@ -63,7 +66,7 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
           code,
           timestamp);
     res.status = 303;
-    res.headers.insert({"Location", "/result?token=" + token});
+    res.headers.insert({"Location", baseUrl + "/result?token=" + token});
   } else {
     W_LOG("can not fine [mdContent] error in request form.");
     res.status = 200;
@@ -79,7 +82,7 @@ Handler result = baseAction("result", [](const Request& req, Response& res) {
     auto row = dao::getSlides(token);
     res.set_content(pages::result(row), httpUtils::contentType::html);
   } else {
-    res.set_redirect("/");
+    res.set_redirect(baseUrl.c_str());
   }
 });
 
@@ -105,10 +108,10 @@ Handler gift = baseAction("gift", [](const Request& req, Response& res) {
   if (req.has_param("token")) {
     auto token = req.get_param_value("token");
     I_LOG("get result for token={}", token);
-    string mdUri = "/getMd?token=" + token;
+    string mdUri = baseUrl + "/getMd?token=" + token;
     res.set_content(pages::gift(mdUri), httpUtils::contentType::html);
   } else {
-    res.set_redirect("/");
+    res.set_redirect(baseUrl.c_str());
   }
 });
 

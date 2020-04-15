@@ -31,44 +31,55 @@ extern Handler getMd;
 extern Handler gift;
 }  // namespace actions
 
+extern const string baseUrl = "/littleGift";
+
 
 void setRoutes(httplib::Server& server) {
+  auto url = [=](const string& path) {
+    string rst{baseUrl};
+    if (!path.empty()) {
+      rst += path;
+    }
+    D_LOG("create route path: [{}]", rst);
+    return rst;
+  };
 
-  auto localPublic = "./resources/static";
-  auto webPublic = "/littleGift/static";
+
+  const string localPublic = "./resources/static";
+  const string webPublic = url("static");
 
   I_LOG("mount local path [{}] to web path [{}]", localPublic, webPublic);
-  if (!server.set_mount_point(webPublic, localPublic)) {
+  if (!server.set_mount_point(webPublic.c_str(), localPublic.c_str())) {
     throw std::runtime_error("mount ./public failed.");
   }
 
-  server.Get("/hi", [](const Request& /*req*/, Response& res) {
+  server.Get(url("/hi").c_str(), [](const Request& /*req*/, Response& res) {
     res.set_content("Hello LittleGift.\n", "text/plain");
   });
 
-  server.Get("/hello", actions::helloAction);
+  server.Get(url("/hello").c_str(), actions::helloAction);
 
-  server.Get("/paramsTest", actions::getParamsTest);
+  server.Get(url("/paramsTest").c_str(), actions::getParamsTest);
 
-  server.Post("/formDataTest", actions::formDataTest);
+  server.Post(url("/formDataTest").c_str(), actions::formDataTest);
 
-  server.Get("/helloJson", actions::helloJson);
+  server.Get(url("/helloJson").c_str(), actions::helloJson);
 
-  server.Post("/jsonReqTest", actions::jsonReqTest);
+  server.Post(url("/jsonReqTest").c_str(), actions::jsonReqTest);
 
 
 
-  server.Get("/", actions::root);
+  server.Get(url("/?").c_str(), actions::root);
 
-  server.Get("/editor", actions::editor);
+  server.Get(url("/editor/?").c_str(), actions::editor);
 
-  server.Get("/result", actions::result);
+  server.Get(url("/result/?").c_str(), actions::result);
 
-  server.Post("/saveSlides", actions::saveSlides);
+  server.Post(url("/saveSlides/?").c_str(), actions::saveSlides);
 
-  server.Get("/gift", actions::gift);
+  server.Get(url("/gift/?").c_str(), actions::gift);
 
-  server.Get("/getMd", actions::getMd);
+  server.Get(url("/getMd/?").c_str(), actions::getMd);
 }
 
 }  // namespace littleGift
