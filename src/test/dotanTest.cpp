@@ -10,9 +10,9 @@
 namespace littleGift {
 namespace test {
 
-  using std::string;
-  using std::cout;
-  using std::endl;
+using std::cout;
+using std::endl;
+using std::string;
 
 void do_read_file(std::istream& in, std::function<void(uint8_t[], size_t)> consumer_fn,
                   size_t buf_size) {
@@ -60,21 +60,21 @@ std::string format_blob(const std::string& format, const uint8_t bits[], size_t 
     return Botan::hex_encode(bits, len);
   }
 #endif
-
-#if defined(BOTAN_HAS_BASE58_CODEC)
-  if (format == "base58") {
-    return Botan::base58_encode(bits, len);
-  }
-  if (format == "base58check") {
-    return Botan::base58_check_encode(bits, len);
-  }
-#endif
+//
+//#if defined(BOTAN_HAS_BASE58_CODEC)
+//  if (format == "base58") {
+//    return Botan::base58_encode(bits, len);
+//  }
+//  if (format == "base58check") {
+//    return Botan::base58_check_encode(bits, len);
+//  }
+//#endif
 
   // If we supported format, we would have already returned
   throw std::runtime_error("Unknown or unsupported format type");
 }
 
-template<typename Alloc>
+template <typename Alloc>
 std::string format_blob(const std::string& format, const std::vector<uint8_t, Alloc>& vec) {
   return format_blob(format, vec.data(), vec.size());
 }
@@ -83,14 +83,13 @@ std::string format_blob(const std::string& format, const std::vector<uint8_t, Al
 void md5Base(const std::string& target) {
   const std::string hash_algo = "MD5";
   const std::string format = "hex";  //"base64"
-                                     //const std::string fsname = "";
+                                     // const std::string fsname = "";
   const size_t buf_size = 4096;
   std::unique_ptr<Botan::HashFunction> hash_fn(Botan::HashFunction::create(hash_algo));
 
-  //std::unique_ptr<Botan::HashFunction> hash_fn{ Botan::get_hash("MD5") };
+  // std::unique_ptr<Botan::HashFunction> hash_fn{ Botan::get_hash("MD5") };
 
-  if(!hash_fn)
-  {
+  if (!hash_fn) {
     auto msg = fmt::format("hashing error: {}", hash_algo);
     E_LOG(msg);
     throw std::runtime_error(msg);
@@ -99,7 +98,7 @@ void md5Base(const std::string& target) {
   T_LOG("hashTest [1] ----------------");
   auto update_hash = [&](const uint8_t b[], size_t l) { hash_fn->update(b, l); };
   T_LOG("hashTest [2] ----------------");
-  //read_file(fsname, update_hash, buf_size);
+  // read_file(fsname, update_hash, buf_size);
 
   T_LOG("hashTest [3] ----------------");
   read_string(target, update_hash, buf_size);
@@ -108,30 +107,27 @@ void md5Base(const std::string& target) {
   const std::string digest = format_blob(format, hash_fn->final());
   T_LOG("hashTest [5] ----------------");
 
-  I_LOG("target string: {}", target );
-  I_LOG("digest {} string: {}", format, digest );
+  I_LOG("target string: {}", target);
+  I_LOG("digest {} string: {}", format, digest);
 }
 
 
 void seekerMd5(const std::string& target) {
-
   auto digest = seeker::Secure::md5(target, 1024);
-  I_LOG("target string: {}", target );
-  I_LOG("digest string: {}", digest );
+  I_LOG("target string: {}", target);
+  I_LOG("digest string: {}", digest);
 }
 
 void seekerSHA256(const std::string& target) {
-
-  auto digest = seeker::Secure::sha256(target, 1024);
-  I_LOG("seekerSHA256 target string: {}", target );
-  I_LOG("seekerSHA256 digest string: {}", digest );
+  // auto digest = seeker::Secure::sha256(target, 1024);
+  // I_LOG("seekerSHA256 target string: {}", target );
+  // I_LOG("seekerSHA256 digest string: {}", digest );
 }
 
 void seekerSHA1(const std::string& target) {
-
   auto digest = seeker::Secure::sha1(target, 1024);
-  I_LOG("seekerSHA1 target string: {}", target );
-  I_LOG("seekerSHA1 digest string: {}", digest );
+  I_LOG("seekerSHA1 target string: {}", target);
+  I_LOG("seekerSHA1 digest string: {}", digest);
 }
 
 void hashTest() {
@@ -139,16 +135,15 @@ void hashTest() {
   I_LOG("test hash begin.");
 
   string target = "aaabbbcccddedf";
-  //md5Base(target);
+  // md5Base(target);
   I_LOG("====================================================");
   seekerMd5(target);
   seekerSHA256(target);
   seekerSHA1(target);
 
-  
+
 
   I_LOG("test hash end.");
-
 }
 
 }  // namespace test

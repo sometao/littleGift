@@ -43,7 +43,7 @@ void runTest() {
     //for test.
     I_LOG("runTest begin.");
     using namespace littleGift::test;
-    testRandomeStr();
+    hashTest();
     I_LOG("runTest end.");
 
   } catch (std::runtime_error ex) {
@@ -114,8 +114,8 @@ int launch() {
 
 int main() {
   seeker::Logger::init(LOG_FILE_NAME, false);
-  launch();
+  //launch();
 
-  //runTest();
+  runTest();
 }
 

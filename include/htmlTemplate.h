@@ -60,7 +60,7 @@ class HtmlTemplate {
       throw std::runtime_error("args error for template[" + templateName + "]");
     } else {
       string outHtml = htmlString;
-      for (int i = 0; i < argsPatternList.size(); i++) {
+      for (size_t i = 0; i < argsPatternList.size(); i++) {
         auto p = argsPatternList.at(i);
         auto value = args.at(i);
         outHtml = std::regex_replace(outHtml, p, value);
@@ -147,7 +147,10 @@ class Engine {
     return ins.loadTemplateImp(templateFile);
   };
 
-  static std::shared_ptr<HtmlTemplate> getTemplate(const string& templateName) {}
+  static std::shared_ptr<HtmlTemplate> getTemplate(const string& templateName) {
+    auto& ins = getInstance();
+    return ins.getTemplateImp(templateName);
+  }
 };
 
 }  // namespace httpTemplate
