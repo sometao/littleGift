@@ -46,7 +46,7 @@ class Secure {
     static auto dic = getCharMap();
     static auto rng = uniformIntDistribution(0, 10 + 26 + 26, Time::currentTime() % INT_MAX);
     string out{};
-    for (int i = 0; i < len; i++) {
+    for (size_t i = 0; i < len; i++) {
       auto r = rng();
       out += dic[r];
     }
