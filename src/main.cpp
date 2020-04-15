@@ -114,8 +114,8 @@ int launch() {
 
 int main() {
   seeker::Logger::init(LOG_FILE_NAME, false);
-  //launch();
+  launch();
 
-  runTest();
+  //runTest();
 }
 
