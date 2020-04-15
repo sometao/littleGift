@@ -96,7 +96,7 @@ class Logger {
     I_LOG("Logger is shutting down.");
     spdlog::drop_all();
     spdlog::shutdown();
-    std::cout << "Logger has been shutdown." << std::endl;
+    std::cout << "Logger shutdown." << std::endl;
   };
 
   static void init(const string& logFile = "", bool useAsyn = true, bool stdOutOn = true, bool fileOutOn = true,
