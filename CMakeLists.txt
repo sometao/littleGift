@@ -134,16 +134,21 @@ message(CMAKE_LIBRARY_PATH            =  ${CMAKE_LIBRARY_PATH})
 message(PROJECT_SOURCE_DIR            =  ${PROJECT_SOURCE_DIR})
 message(CMAKE_BUILD_TYPE              =  ${CMAKE_BUILD_TYPE})
 
+message(" ===================== SETTING ======================")
+message(CPPHTTPLIB_ZLIB_SUPPORT       =  ${CPPHTTPLIB_ZLIB_SUPPORT})
+message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
+
+
 message(" ==================== LIBRARY PATH =====================")
 message(LIBSSL_LIBRARY                =  ${LIBSSL_LIBRARY})
 message(LIBCRYPTO_LIBRARY             =  ${LIBCRYPTO_LIBRARY})
 message(SQLITE3_LIBRARY               =  ${SQLITE3_LIBRARY})
 message(ZLIB_LIBRARY                  =  ${ZLIB_LIBRARY})
-message(BOTAN_LIBRARY                 =  ${BOTAN_LIBRARY})
 
-message(" ===================== SETTING ======================")
-message(CPPHTTPLIB_ZLIB_SUPPORT       =  ${CPPHTTPLIB_ZLIB_SUPPORT})
-message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
+
+message(" ==================== INCLUDE PATH =====================")
+message(BOTAN_INCLUDE_DIR             =  ${BOTAN_INCLUDE_DIR})
+
 
 
 
