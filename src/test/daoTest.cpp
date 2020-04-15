@@ -1,6 +1,6 @@
 #include "littleGift.h"
 #include "seeker/database.h"
-#include "DAO.h"
+#include "dao.h"
 #include <string>
 #include <iostream>
 
