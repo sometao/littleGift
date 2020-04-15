@@ -3,24 +3,19 @@
 #
 cmake_minimum_required (VERSION 3.10)
 
-include(./.SET_LOCAL_PATH.cmake)
 
-
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-	message("Setting build type to 'RelWithDebInfo' as none was specified.")
-	set(CMAKE_BUILD_TYPE RelWithDebInfo CACHE STRING "Choose the type of build." FORCE)
-
-	set_property(CACHE CMAKE_BUILD_TYPE PROPERTY STRINGS 
-		"Debug" 
-		"Release"
-		"MinSizeRel" 
-		"RelWithDebInfo"
-	)
-endif()
 
 project ("littleGift" VERSION 0.3)
 
+include(./cmake/checkBuildType.cmake)
 
+#-------------------------------------
+#  spdlog settings
+#-------------------------------------
+include(./cmake/utils.cmake)
+
+
+include(./.SET_LOCAL_PATH.cmake)
 
 
 # --------------------------------------------------------------------------
@@ -80,6 +75,8 @@ endif()
 #  botan lib.
 #-------------------------------------
 #set(BOTAN_LIBRARY "${PROJECT_SOURCE_DIR}/lib/botan.lib")
+
+find_path(BOTAN_INCLUDE_DIR "botan-2/botan/botan.h" REQUIRED)
 if(WIN32)
 	find_library(BOTAN_LIBRARY botan.lib REQUIRED)
 elseif(UNIX)
@@ -102,11 +99,6 @@ endif()
 #  Threads
 #-------------------------------------
 find_package(Threads REQUIRED) 
-
-#-------------------------------------
-#  spdlog settings
-#-------------------------------------
-include(./cmake/utils.cmake)
 
 
 
@@ -154,18 +146,6 @@ message(CPPHTTPLIB_ZLIB_SUPPORT       =  ${CPPHTTPLIB_ZLIB_SUPPORT})
 message(CPPHTTPLIB_THREAD_POOL_COUNT  =  ${CPPHTTPLIB_THREAD_POOL_COUNT})
 
 
-if(CMAKE_BUILD_TYPE MATCHES "Debug")
-    message( "CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}")
-		set(BUILD_DEBUG 1)
-elseif(CMAKE_BUILD_TYPE MATCHES "Release" 
-	OR CMAKE_BUILD_TYPE MATCHES "RelWithDebInfo"
-	OR CMAKE_BUILD_TYPE MATCHES "MinSizeRel" ) 
-		message("CMAKE_BUILD_TYPE is ${CMAKE_BUILD_TYPE}")
-		set(BUILD_DEBUG 0)
-else()
-    message(WARNING "unknown CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}, try build RELEASE.")
-		set(BUILD_DEBUG 0)
-endif()
 
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
@@ -181,12 +161,15 @@ add_executable (${PROJECT_NAME}
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
   "src/dao.cpp" 
-  "src/test/daoTest.cpp" "src/test/dotanTest.cpp" "src/test/secureTest.cpp")
+  "src/test/daoTest.cpp"
+	"src/test/dotanTest.cpp"
+	"src/test/secureTest.cpp")
 
 
 target_include_directories( ${PROJECT_NAME}  
 	PRIVATE 
 		${PROJECT_SOURCE_DIR}/include
+		${BOTAN_INCLUDE_DIR}
 )
 
 
@@ -222,21 +205,21 @@ if(WIN32)
 			$<TARGET_FILE_DIR:${PROJECT_NAME}>
 	)
 
-	if(BUILD_DEBUG)
-		  message("BUILD_RELEASE on")
-			add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different
-					"${PROJECT_SOURCE_DIR}/lib/debug/botan.dll"              
-					$<TARGET_FILE_DIR:${PROJECT_NAME}>
-			)
-	else()
-	    message("BUILD_RELEASE off")
-    	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
-				COMMAND ${CMAKE_COMMAND} -E copy_if_different
-					"${PROJECT_SOURCE_DIR}/lib/release/botan.dll"              
-					$<TARGET_FILE_DIR:${PROJECT_NAME}>
-			)
-	endif()
+#	if(BUILD_DEBUG)
+#		  message("BUILD_RELEASE on")
+#			add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+#				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#					"${PROJECT_SOURCE_DIR}/lib/debug/botan.dll"              
+#					$<TARGET_FILE_DIR:${PROJECT_NAME}>
+#			)
+#	else()
+#	    message("BUILD_RELEASE off")
+#    	add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD 
+#				COMMAND ${CMAKE_COMMAND} -E copy_if_different
+#					"${PROJECT_SOURCE_DIR}/lib/release/botan.dll"              
+#					$<TARGET_FILE_DIR:${PROJECT_NAME}>
+#			)
+#	endif()
 
 endif()
 
