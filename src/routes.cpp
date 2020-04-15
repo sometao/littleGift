@@ -18,11 +18,13 @@ using Handler = Server::Handler;
 
 namespace actions {
 extern httplib::Logger actionLogger;
-extern Handler helloAction;
-extern Handler getParamsTest;
-extern Handler formDataTest;
-extern Handler helloJson;
-extern Handler jsonReqTest;
+
+//extern Handler helloAction;
+//extern Handler getParamsTest;
+//extern Handler formDataTest;
+//extern Handler helloJson;
+//extern Handler jsonReqTest;
+
 extern Handler editor;
 extern Handler result;
 extern Handler saveSlides;
@@ -57,15 +59,11 @@ void setRoutes(httplib::Server& server) {
     res.set_content("Hello LittleGift.\n", "text/plain");
   });
 
-  server.Get(url("/hello").c_str(), actions::helloAction);
-
-  server.Get(url("/paramsTest").c_str(), actions::getParamsTest);
-
-  server.Post(url("/formDataTest").c_str(), actions::formDataTest);
-
-  server.Get(url("/helloJson").c_str(), actions::helloJson);
-
-  server.Post(url("/jsonReqTest").c_str(), actions::jsonReqTest);
+  //server.Get(url("/hello").c_str(), actions::helloAction);
+  //server.Get(url("/paramsTest").c_str(), actions::getParamsTest);
+  //server.Post(url("/formDataTest").c_str(), actions::formDataTest);
+  //server.Get(url("/helloJson").c_str(), actions::helloJson);
+  //server.Post(url("/jsonReqTest").c_str(), actions::jsonReqTest);
 
 
 
