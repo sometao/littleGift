@@ -164,17 +164,18 @@ add_executable (${PROJECT_NAME}
   "src/appUitls.cpp"
   "src/main.cpp" 
 	"src/pch.cpp" 
-	"src/test/tmptest.cpp" 
 	"src/actions.cpp" 
 	"src/pages.cpp" 
-	"src/test/testActions.cpp" 
 	"src/logger.cpp" 
 	"src/base.cpp" 
 	"src/httpUtils.cpp"
   "src/dao.cpp" 
-  "src/test/daoTest.cpp"
-	"src/test/dotanTest.cpp"
-	"src/test/secureTest.cpp")
+	#"src/test/tmptest.cpp" 
+	#"src/test/testActions.cpp" 
+  #"src/test/daoTest.cpp"
+	#"src/test/dotanTest.cpp"
+	#"src/test/secureTest.cpp"
+)
 
 
 target_include_directories( ${PROJECT_NAME}  
