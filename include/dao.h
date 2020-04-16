@@ -23,6 +23,8 @@ std::shared_ptr<SlidesRow> getSlides(const string& token);
 
 void initContentTable();
 
+void init();
+
 }  // namespace dao
 
 }  // namespace littleGIft

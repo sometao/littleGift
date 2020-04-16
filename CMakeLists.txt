@@ -160,13 +160,13 @@ message(BOTAN_INCLUDE_DIR             =  ${BOTAN_INCLUDE_DIR})
 # Add source to this project's executable.
 add_executable (${PROJECT_NAME} 
 	"src/routes.cpp"
-  "src/appUitls.cpp"
+  
   "src/main.cpp" 
 	"src/pch.cpp" 
 	"src/actions.cpp" 
 	"src/pages.cpp" 
-	"src/logger.cpp" 
-	"src/base.cpp" 
+	 
+	 
 	"src/httpUtils.cpp"
   "src/dao.cpp" 
 	#"src/test/tmptest.cpp" 

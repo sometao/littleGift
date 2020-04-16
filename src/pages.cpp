@@ -7,7 +7,6 @@
 #include <memory>
 
 namespace littleGift {
-extern void encodeHTML(char* des, const char* src, int desSize);
 
 namespace pages {
 
@@ -53,9 +52,6 @@ const string preview(const string& mdContent) {
 const string helloPage(string name) {
   static constexpr const int maxLen = 128;
 
-  char tmp[maxLen] = {0};
-  encodeHTML(tmp, name.c_str(), maxLen);
-  cout << "tmp:\n" << tmp << endl;
 
   static constexpr const char fmt[] = R"(<html>
   <head>
@@ -70,12 +66,10 @@ const string helloPage(string name) {
   constexpr int size = len + maxLen;
   char out[size] = {0};
 
-  auto r = snprintf(out, size, fmt, tmp);
   cout << "fmt:\n" << fmt << endl;
   cout << "name: " << name << endl;
   cout << "len: " << len << endl;
   cout << "size: " << size << endl;
-  cout << "r: " << r << endl;
   cout << "out:\n" << out << endl;
   return out;
 }

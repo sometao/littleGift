@@ -83,4 +83,75 @@ void setRoutes(httplib::Server& server) {
   server.Get(url("/getMd/?").c_str(), actions::getMd);
 }
 
+
+Server::Handler errorHandler = [](const Request& req, Response& res) {
+  //auto fmt = "<p>Error Status: <span style='color:red;'>%d</span></p>";
+
+  const std::string page = fmt::format(R"(
+<p>Error Status: <span style='color:red;'>{}</span></p>
+<a href="javascript:history.go(-1);">Back</a>
+<a href="/littleGift">home</a>
+)", res.status);
+
+  W_LOG("Request Error: [{}] {} stateCode: {}", req.method, req.path, res.status);
+  res.set_content(page.c_str(), "text/html");
+};
+
+httplib::Logger baseLogger = [](const Request& req, const Response& res) {
+  I_LOG("[{}] access {}", req.method, req.path);
+};
+
+static void config(httplib::Server& server) {
+  //server.set_logger(baseLogger);
+  server.set_error_handler(errorHandler);
+}
+
+
+static void serverListening(Server& svr, const string& host, int port) {
+  I_LOG("starting server {}:{}", host, port);
+  try {
+    svr.listen(host.c_str(), port, 0);
+  } catch (std::runtime_error ex) {
+    E_LOG("startServer runtime_error: {}", ex.what());
+  } catch (...) {
+    E_LOG("startServer unknown error.");
+  }
+  W_LOG("Server thread exited.");
+}
+
+
+
+void startServer(const string& interface, int port) {
+  Server svr;
+
+  try {
+    littleGift::setRoutes(svr);
+    littleGift::config(svr);
+    std::thread serverThread{serverListening, std::ref(svr), std::ref(interface), port};
+    serverThread.detach();
+    int counter = 60;
+    while (!svr.is_running() && --counter > 0) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    }
+  } catch (std::runtime_error ex) {
+    E_LOG("server init error: {}", ex.what());
+  } catch (...) {
+    E_LOG("server init unknown error");
+  }
+
+  I_LOG("SERVER STARTED: {}:{}", interface, port);
+  auto startTime = seeker::Time::currentTime();
+  while (svr.is_running()) {
+    std::this_thread::sleep_for(std::chrono::seconds(15));
+    T_LOG("Server is running {} seconds", (seeker::Time::currentTime() - startTime) / 1000);
+  }
+
+  W_LOG("SERVER STOPPED.");
+  cout << "DONE." << endl;
+}
+
+
+
+
+
 }  // namespace littleGift

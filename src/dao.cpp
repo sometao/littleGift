@@ -1,6 +1,6 @@
 #include "littleGift.h"
-#include "dao.h"
 #include "seeker/database.h"
+#include "dao.h"
 #include <iostream>
 #include <string>
 #include <memory>
@@ -132,6 +132,11 @@ CREATE UNIQUE INDEX IF NOT EXISTS slides_tkn_idx on slides (access_token);
   I_LOG("init createContentTable done.");
 }
 
+
+void init() {
+  seeker::SqliteDB::init( SQLITE_DB_FILE );
+  initContentTable();
+}
 
 
 }  // namespace dao
