@@ -6,26 +6,31 @@
 - Try using http in C++.
 - Learning how to use database.
 
+#### Features
+- [X] Post markdown text and get slides page.
+- [X] Keep markdown in DB
+- [ ] Preview slides
+- [ ] Local static server for html develop
+- [ ] Only login user can access slides page.
+- [ ] Delete data after expired.
+- [ ] Edit exist slides
+
+
+#### Pages
+- [X] Editor
+- [ ] Preview
+- [ ] Slides information 
+- [ ] Presentation
+- [ ] Home
+
+
 #### Try and learn.
 - [X] Get Html from server
 - [X] Post form data
-- [ ] Post Json data
+- [X] Post Json data
 - [ ] Try Cookie
 - [ ] Login / Logout
 - [ ] upload file and save it in server.
-- [ ] save data in DB.
-
-#### Features
-- [ ] Post markdown text and get slides page.
-- [ ] keep markdown in file
-- [ ] keep markdown in DB
-- [ ] only login user can access slides page.
-- [ ] delete data after expired.
+- [X] save data in DB.
 
 
-
-
-#### botan compile modules
-```
-python ./configure.py --cc=msvc --cpu=x86_64 --os=windows --minimized-build --enable-modules=md5,sha1,sha1_sse2,hash,hash_id,hex,rng,rsa,aes,base64,system_rng,uuid,des 
-```

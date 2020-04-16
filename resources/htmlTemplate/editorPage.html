@@ -57,15 +57,35 @@
   <div id="outer">
     <div id="editor-container">
       <textarea id="code-editor" rows="20" cols="80" form="dataForm" name="mdContent"></textarea>
-      <form id="dataForm" 
-            action="/littleGift/saveSlides" 
-            method="post" 
+      <form id="dataForm"
+            method="post"
             enctype="multipart/form-data">
         <p>Author: <input type="text" name="author" /></p>
-        <input type="submit" value="Submit" />
       </form>
+      <button onclick="submitClick()">Submit</button>
+      <button onclick="previewClick()">Preview</button>
     </div>
   </div>
+
+  <script>
+
+    function submitClick() {
+      console.log("submitClick...");
+      var form = document.forms['dataForm'];
+      form.action = "/littleGift/saveSlides";
+      form.target = "";
+      form.submit();
+    }
+
+    function previewClick() {
+      console.log("previewClick...");
+      var form = document.forms['dataForm'];
+      form.action = "/littleGift/preview";
+      form.target = "_blank";
+      form.submit();
+    }
+
+  </script>
 
 
 

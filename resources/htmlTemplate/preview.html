@@ -1,18 +1,18 @@
-﻿<!--Args(mdUri)-->
+﻿<!--Args(mdContent)-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-  <title>Gift</title>
+  <title>Preview</title>
 
-  <link rel="stylesheet" href="/littleGift/static/reveal/css/reset.css">
-  <link rel="stylesheet" href="/littleGift/static/reveal/css/reveal.css">
-  <link rel="stylesheet" href="/littleGift/static/reveal/css/theme/black.css">
+  <link rel="stylesheet" href="/littleGift/static/reveal/css/reset.css" />
+  <link rel="stylesheet" href="/littleGift/static/reveal/css/reveal.css" />
+  <link rel="stylesheet" href="/littleGift/static/reveal/css/theme/black.css" />
 
   <!-- Theme used for syntax highlighting of code -->
-  <link rel="stylesheet" href="/littleGift/static/reveal/lib/css/monokai.css">
+  <link rel="stylesheet" href="/littleGift/static/reveal/lib/css/monokai.css" />
 
   <!-- Printing and PDF exports -->
   <script>
@@ -26,10 +26,11 @@
 <body>
   <div class="reveal">
     <div class="slides">
-      <section data-markdown="<!--@mdUri[-->example.md<!--]mdUri@-->"
+      <section data-markdown
                data-separator="^\n\n\n"
                data-separator-vertical="^\n\n"
                data-separator-notes="^Note:">
+        <textarea data-template=data-template><!--@mdContent[--><!--]mdContent@--></textarea>
       </section>
     </div>
   </div>

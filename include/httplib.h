@@ -4,7 +4,7 @@
 //  Copyright (c) 2020 Yuji Hirose. All rights reserved.
 //  MIT License
 //
-#include "littleGift.h"
+
 #ifndef CPPHTTPLIB_HTTPLIB_H
 #define CPPHTTPLIB_HTTPLIB_H
 
@@ -3383,7 +3383,6 @@ inline bool Server::listen_internal() {
 
 inline bool Server::routing(Request &req, Response &res, Stream &strm,
                             bool last_connection) {
-  T_LOG("httplib routing: path: [{}]", req.path);
   // File handler
   bool is_head_request = req.method == "HEAD";
   if ((req.method == "GET" || is_head_request) &&

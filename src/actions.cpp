@@ -21,6 +21,7 @@ namespace pages {
 extern const string editor();
 extern const string result(std::shared_ptr<dao::SlidesRow> row);
 extern const string gift(const string& mdUri);
+extern const string preview(const string& mdContent);
 
 }  // namespace pages
 
@@ -31,6 +32,22 @@ namespace actions {
 using namespace httplib;
 using Handler = Server::Handler;
 using httpUtils::baseAction;
+
+static string formatMd(const string& mdContent) {
+
+
+  static std::regex reg = std::regex(R"(\r\n?)");
+  static std::regex emptyLine = std::regex{R"(^[ \t]+$)"};
+  static std::regex fourEmptyLine = std::regex{R"(\n{5,})"};
+
+  string rst{mdContent};
+
+  rst = std::regex_replace(rst, reg, "\n");
+  rst = std::regex_replace(rst, emptyLine, "");
+  rst = std::regex_replace(rst, fourEmptyLine, "\n\n\n\n");
+  rst = seeker::String::removeLastEmptyLines(rst);
+  return rst;
+}
 
 Handler root = baseAction("root", [](const Request& req, Response& res) {
   string path = baseUrl + "/editor";
@@ -45,11 +62,10 @@ Handler editor = baseAction("editor", [](const Request& req, Response& res) {
 
 
 Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& res) {
-  static auto reg = std::regex(R"(\r\n?)");
 
   if (req.has_file("mdContent")) {
     const auto& value = req.get_file_value("mdContent");
-    auto mdContent = std::regex_replace(value.content, reg, "\n");
+    auto mdContent = value.content;
     string author = req.has_file("author") ? req.get_file_value("author").content : "";
     auto timestamp = seeker::Time::currentTime();
     string token = seeker::Secure::md5(mdContent + std::to_string(timestamp));
@@ -87,16 +103,12 @@ Handler result = baseAction("result", [](const Request& req, Response& res) {
 });
 
 Handler getMd = baseAction("getMd", [](const Request& req, Response& res) {
-  auto emptyLine = std::regex{R"(^[ \t]+$)"};
-  auto fourEmptyLine = std::regex{R"(\n{5,})"};
+
   if (req.has_param("token")) {
     auto token = req.get_param_value("token");
     I_LOG("getMd for token={}", token);
     auto row = dao::getSlides(token);
-    string content = row->content;
-    content = std::regex_replace(content, emptyLine, "");
-    content = std::regex_replace(content, fourEmptyLine, "\n\n\n\n");
-    content = seeker::String::removeLastEmptyLines(content);
+    string content = formatMd(row->content);
     res.set_content(content, httpUtils::contentType::plain);
   } else {
     res.set_content("Can not fine your resources.", httpUtils::contentType::plain);
@@ -107,10 +119,23 @@ Handler getMd = baseAction("getMd", [](const Request& req, Response& res) {
 Handler gift = baseAction("gift", [](const Request& req, Response& res) {
   if (req.has_param("token")) {
     auto token = req.get_param_value("token");
-    I_LOG("get result for token={}", token);
+    I_LOG("get gift for token={}", token);
     string mdUri = baseUrl + "/getMd?token=" + token;
     res.set_content(pages::gift(mdUri), httpUtils::contentType::html);
   } else {
+    W_LOG("Can not get gift without token.");
+    res.set_redirect(baseUrl.c_str());
+  }
+});
+
+
+Handler preview = baseAction("preview", [](const Request& req, Response& res) {
+  if (req.has_file("mdContent")) {
+    const auto& value = req.get_file_value("mdContent");
+    string mdContent = formatMd(value.content);
+    res.set_content(pages::preview(mdContent), httpUtils::contentType::html);
+  } else {
+    W_LOG("Can not preview gift without mdContent.");
     res.set_redirect(baseUrl.c_str());
   }
 });

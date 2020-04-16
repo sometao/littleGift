@@ -22,6 +22,7 @@ namespace dao{
   void initContentTable();
 }
 
+
 namespace test {
 //extern void testHtmlTemplate();
 //extern void testStringSplit();

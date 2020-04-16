@@ -31,6 +31,7 @@ extern Handler saveSlides;
 extern Handler root;
 extern Handler getMd;
 extern Handler gift;
+extern Handler preview;
 }  // namespace actions
 
 extern const string baseUrl = "/littleGift";
@@ -76,6 +77,8 @@ void setRoutes(httplib::Server& server) {
   server.Post(url("/saveSlides/?").c_str(), actions::saveSlides);
 
   server.Get(url("/gift/?").c_str(), actions::gift);
+
+  server.Post(url("/preview/?").c_str(), actions::preview);
 
   server.Get(url("/getMd/?").c_str(), actions::getMd);
 }
