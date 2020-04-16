@@ -1,5 +1,5 @@
 #pragma once
-#include "seeker/logger.h"
+#include "seeker/loggerApi.h"
 #include "sqlite3.h"
 #include <string>
 #include <mutex>

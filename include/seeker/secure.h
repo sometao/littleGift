@@ -1,6 +1,6 @@
 #pragma once
 
-#include "seeker/logger.h"
+#include "seeker/loggerApi.h"
 #include "botan/hash.h"
 #include "botan/hex.h"
 #include <string>

@@ -1,4 +1,5 @@
 #include "littleGift.h"
+#include "seeker/logger.h"
 #include "seeker/common.h"
 #include "seeker/database.h"
 #include <iostream>

@@ -32,7 +32,7 @@ int64_t addSlides(const SlidesRow& row) {
       "insert into slides (author_name, content, content_type, access_token, edit_code, "
       "create_time ) values (?, ?, ?, ?, ?, ?);";
 
-  D_LOG("addSlides author_name={}, content={} ", row.authorName, row.content);
+  D_LOG("addSlides author_name={}, content={} ", row.authorName, row.content.substr(0, 6));
   auto stmtPtr = SqliteDB::perpare(sql);
   auto stmt = stmtPtr.get();
 
