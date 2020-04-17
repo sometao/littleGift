@@ -9,18 +9,19 @@
 #### Features
 - [X] Post markdown text and get slides page.
 - [X] Keep markdown in DB
-- [ ] Preview slides
-- [ ] Local static server for html develop
-- [ ] Only login user can access slides page.
-- [ ] Delete data after expired.
+- [X] Preview slides
+- [ ] Code to access slides page
+- [ ] Delete data after expired
+- [ ] User system
 - [ ] Edit exist slides
+- [ ] Local static server for html develop
 
 
 #### Pages
 - [X] Editor
-- [ ] Preview
+- [X] Preview
 - [ ] Slides information 
-- [ ] Presentation
+- [X] Presentation
 - [ ] Home
 
 
