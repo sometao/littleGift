@@ -36,7 +36,16 @@ class String {
     return out;
   }
 
- public:
+  static string trim(string& s) {
+    string rst{s};
+    if (rst.empty()) {
+      return rst;
+    }
+    rst.erase(0, rst.find_first_not_of(" "));
+    rst.erase(s.find_last_not_of(" ") + 1);
+    return rst;
+  }
+
   static std::vector<string> split(const string& target, const string& sp) {
     std::vector<string> rst{};
     if (target.size() == 0) {

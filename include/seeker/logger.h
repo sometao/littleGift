@@ -91,7 +91,7 @@ class Logger {
     std::cout << "Logger shutdown." << std::endl;
   };
 
-  static void init(const string& logFile = "", bool useAsyn = true, bool stdOutOn = true, bool fileOutOn = true,
+  static void init(const string& logFile = "", bool useAsyn = false, bool stdOutOn = true, bool fileOutOn = true,
                    const string& pattern = "") {
     static bool inited = false;
     if (!inited) {
@@ -102,8 +102,6 @@ class Logger {
             fileOutOn,
             useAsyn);
       I_LOG("Logger pattern: {}", instence.usePattern);
-
-
     } else {
       W_LOG("Logger has been inited before, do nothing.");
     }

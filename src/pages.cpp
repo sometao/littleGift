@@ -22,6 +22,7 @@ const string editor() {
   return outHtml;
 }
 
+
 const string result( std::shared_ptr<dao::SlidesRow> row) {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("result.html");
   std::vector<string> args{row->content, row->accessToken, row->editCode, row->authorName, std::to_string(row->createTime)};
@@ -29,6 +30,7 @@ const string result( std::shared_ptr<dao::SlidesRow> row) {
   return outHtml;
 }
 
+//TODO no need it?
 const string gift(const string& mdUri) {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("gift.html");
   std::vector<string> args{mdUri};
@@ -43,7 +45,7 @@ const string codeChecker(const string& token) {
   return outHtml;
 }
 
-
+//TODO rename preview to something else, like gift?
 const string preview(const string& mdContent) {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("preview.html");
   std::vector<string> args{mdContent};

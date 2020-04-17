@@ -29,8 +29,9 @@ extern Handler editor;
 extern Handler result;
 extern Handler saveSlides;
 extern Handler root;
-extern Handler getMd;
-extern Handler gift;
+//extern Handler getMd;
+extern Handler giftGet;
+extern Handler giftPost;
 extern Handler preview;
 }  // namespace actions
 
@@ -76,11 +77,13 @@ void setRoutes(httplib::Server& server) {
 
   server.Post(url("/saveSlides/?").c_str(), actions::saveSlides);
 
-  server.Get(url("/gift/?").c_str(), actions::gift);
+  server.Get(url("/gift/?").c_str(), actions::giftGet);
+
+  server.Post(url("/gift/?").c_str(), actions::giftPost);
 
   server.Post(url("/preview/?").c_str(), actions::preview);
 
-  server.Get(url("/getMd/?").c_str(), actions::getMd);
+  //server.Get(url("/getMd/?").c_str(), actions::getMd);
 }
 
 

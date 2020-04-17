@@ -97,7 +97,6 @@ shared_ptr<SlidesRow> getSlides(const string& token) {
     return row;
 
   } else if (rc == SQLITE_DONE) {
-    sqlite3_finalize(stmt);
     W_LOG("can not getSlides with token={}", token);
     shared_ptr<SlidesRow> empty{};
     return empty;
@@ -109,7 +108,7 @@ shared_ptr<SlidesRow> getSlides(const string& token) {
 
 }
 
-
+//TODO editCode rename to authCode?
 void initContentTable() {
   const string sql = R"(
 CREATE TABLE IF NOT EXISTS slides(

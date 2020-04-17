@@ -1,4 +1,4 @@
-<!--Args(token)-->
+﻿<!--Args(token)-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
@@ -19,8 +19,8 @@
       line-height: 60px;
       background: blue;
       margin: 0 auto;
-      position: relative; /*脱离文档流*/
-      top: 40%; /*偏移*/
+      position: relative;
+      top: 40%;
     }
   </style>
 
@@ -29,7 +29,7 @@
   <div id="codeContainer">
     <form id="dataForm" method="post" enctype="multipart/form-data" action="/littleGift/gift">
       <input name="code" type="text" placeholder="code" style="width: 100px;">
-      <input name="token" type="hidden" value="<!--@content1[-->token<!--]content1@-->" readonly>
+      <input name="token" type="hidden" value="<!--@token[-->token<!--]token@-->" readonly>
       <button type="submit" style="width: 35px;">Go</button>
     </form>
   </div>

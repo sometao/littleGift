@@ -22,6 +22,7 @@ extern const string editor();
 extern const string result(std::shared_ptr<dao::SlidesRow> row);
 extern const string gift(const string& mdUri);
 extern const string preview(const string& mdContent);
+extern const string codeChecker(const string& mdContent);
 
 }  // namespace pages
 
@@ -83,6 +84,8 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
           token,
           code,
           timestamp);
+
+    //TODO return result page instead of redirect.
     res.status = 303;
     res.headers.insert({"Location", baseUrl + "/result?token=" + token});
   } else {
@@ -92,7 +95,7 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
   }
 });
 
-
+//TODO no need it any more?
 Handler result = baseAction("result", [](const Request& req, Response& res) {
   if (req.has_param("token")) {
     auto token = req.get_param_value("token");
@@ -104,53 +107,54 @@ Handler result = baseAction("result", [](const Request& req, Response& res) {
   }
 });
 
-Handler getMd = baseAction("getMd", [](const Request& req, Response& res) {
 
-  if (req.has_param("token")) {
-    auto token = req.get_param_value("token");
-    I_LOG("getMd for token={}", token);
-    auto row = dao::getSlides(token);
-
-    //TODO if this slides need code, get code from param and check it.
-
-    string content = formatMd(row->content);
-    res.set_content(content, httpUtils::contentType::plain);
-  } else {
-    res.set_content("Can not fine your resources.", httpUtils::contentType::plain);
-  }
-});
+//FIXME not need any more.
+//Handler getMd = baseAction("getMd", [](const Request& req, Response& res) {
+//
+//  if (req.has_param("token")) {
+//    auto token = req.get_param_value("token");
+//    I_LOG("getMd for token={}", token);
+//    auto row = dao::getSlides(token);
+//    string content = formatMd(row->content);
+//    res.set_content(content, httpUtils::contentType::plain);
+//  } else {
+//    res.set_content("Can not fine your resources.", httpUtils::contentType::plain);
+//  }
+//});
 
 
 Handler giftGet = baseAction("giftGet", [](const Request& req, Response& res) {
   if (req.has_param("token")) {
     auto token = req.get_param_value("token");
-
-    //TODO if the slides need code, return codeChecker page, else return gift page.
-
-    I_LOG("get gift for token={}", token);
-    string mdUri = baseUrl + "/getMd?token=" + token;
-    res.set_content(pages::gift(mdUri), httpUtils::contentType::html);
+    auto row = dao::getSlides(token);
+    if(row->editCode.empty()) {
+      string mdContent = formatMd(row->content);
+      res.set_content(pages::preview(mdContent), httpUtils::contentType::html);
+    } else {
+      res.set_content(pages::codeChecker(token), httpUtils::contentType::html);
+    }
   } else {
-    W_LOG("Can not get gift without token.");
-    res.set_redirect(baseUrl.c_str());
+    W_LOG("giftGet can not get gift without token.");
+    res.status = 404;
   }
 });
 
 Handler giftPost = baseAction("giftPost", [](const Request& req, Response& res) {
-  if (req.has_param("token") && req.has_param("code")) {
-    auto token = req.get_param_value("token");
-    auto code = req.get_param_value("code");
+  if (req.has_file("token") && req.has_file("code") ) {
+    const auto& value = req.get_file_value("token");
+    auto token = req.get_file_value("token").content;
+    auto code = req.get_file_value("code").content;
     I_LOG("giftPost for token={} with code={}", token, code);
-
-    //TODO check code and create OneTimeAccessCode
-
-    string oneTimeCode = "";
-
-    string mdUri = baseUrl + "/getMd?token=" + token + "&oneTimeCode=" + oneTimeCode;
-    res.set_content(pages::gift(mdUri), httpUtils::contentType::html);
+    auto row = dao::getSlides(token);
+    if(seeker::String::trim(code) == row->editCode) {
+      string mdContent = formatMd(row->content);
+      res.set_content(pages::preview(mdContent), httpUtils::contentType::html);
+    } else {
+      res.set_content(pages::codeChecker(token), httpUtils::contentType::html);
+    }
   } else {
-    W_LOG("Can not get gift without token.");
-    res.set_redirect(baseUrl.c_str());
+    W_LOG("giftPost form data error.");
+    res.status = 404;
   }
 });
 
