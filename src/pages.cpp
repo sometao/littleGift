@@ -36,6 +36,13 @@ const string gift(const string& mdUri) {
   return outHtml;
 }
 
+const string codeChecker(const string& token) {
+  static auto htmlPattern = httpTemplate::Engine::loadTemplate("codeChecker.html");
+  std::vector<string> args{token};
+  auto outHtml = htmlPattern->genHtml(args);
+  return outHtml;
+}
+
 
 const string preview(const string& mdContent) {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("preview.html");

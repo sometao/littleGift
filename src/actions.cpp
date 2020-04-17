@@ -67,10 +67,12 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
     const auto& value = req.get_file_value("mdContent");
     auto mdContent = value.content;
     string author = req.has_file("author") ? req.get_file_value("author").content : "";
-    auto timestamp = seeker::Time::currentTime();
-    string token = seeker::Secure::md5(mdContent + std::to_string(timestamp));
+    string code = req.has_file("code") ? req.get_file_value("code").content : "";
+
+    string token = seeker::Secure::sha1(mdContent + seeker::Secure::randomChars(16));
     token = seeker::String::toLower(token);
-    string code = seeker::Secure::randomChars(6);
+
+    auto timestamp = seeker::Time::currentTime();
 
     dao::SlidesRow row{-1, author, mdContent, "", token, code, timestamp};
     auto id = dao::addSlides(row);
@@ -108,6 +110,9 @@ Handler getMd = baseAction("getMd", [](const Request& req, Response& res) {
     auto token = req.get_param_value("token");
     I_LOG("getMd for token={}", token);
     auto row = dao::getSlides(token);
+
+    //TODO if this slides need code, get code from param and check it.
+
     string content = formatMd(row->content);
     res.set_content(content, httpUtils::contentType::plain);
   } else {
@@ -116,11 +121,32 @@ Handler getMd = baseAction("getMd", [](const Request& req, Response& res) {
 });
 
 
-Handler gift = baseAction("gift", [](const Request& req, Response& res) {
+Handler giftGet = baseAction("giftGet", [](const Request& req, Response& res) {
   if (req.has_param("token")) {
     auto token = req.get_param_value("token");
+
+    //TODO if the slides need code, return codeChecker page, else return gift page.
+
     I_LOG("get gift for token={}", token);
     string mdUri = baseUrl + "/getMd?token=" + token;
+    res.set_content(pages::gift(mdUri), httpUtils::contentType::html);
+  } else {
+    W_LOG("Can not get gift without token.");
+    res.set_redirect(baseUrl.c_str());
+  }
+});
+
+Handler giftPost = baseAction("giftPost", [](const Request& req, Response& res) {
+  if (req.has_param("token") && req.has_param("code")) {
+    auto token = req.get_param_value("token");
+    auto code = req.get_param_value("code");
+    I_LOG("giftPost for token={} with code={}", token, code);
+
+    //TODO check code and create OneTimeAccessCode
+
+    string oneTimeCode = "";
+
+    string mdUri = baseUrl + "/getMd?token=" + token + "&oneTimeCode=" + oneTimeCode;
     res.set_content(pages::gift(mdUri), httpUtils::contentType::html);
   } else {
     W_LOG("Can not get gift without token.");
