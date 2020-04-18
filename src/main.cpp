@@ -15,7 +15,6 @@ namespace dao {
 extern void init();
 }
 
-
 namespace test {
 // extern void testHtmlTemplate();
 // extern void testStringSplit();

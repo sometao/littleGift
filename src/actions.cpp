@@ -42,6 +42,7 @@ static string formatMd(const string& mdContent) {
   static std::regex fourEmptyLine = std::regex{R"(\n{5,})"};
 
   string rst{mdContent};
+  //TODO remove empty lines at beginning.
 
   rst = std::regex_replace(rst, reg, "\n");
   rst = std::regex_replace(rst, emptyLine, "");
@@ -69,25 +70,25 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
     auto mdContent = value.content;
     string author = req.has_file("author") ? req.get_file_value("author").content : "";
     string code = req.has_file("code") ? req.get_file_value("code").content : "";
+    if(!code.empty() && code.length() < 3) {
+      W_LOG("saveSlides code[{}] length must larger than 2.", code);
+      res.status = 403;
+    } else {
+      string token = seeker::Secure::sha1(mdContent + seeker::Secure::randomChars(16));
+      token = seeker::String::toLower(token);
+      auto timestamp = seeker::Time::currentTime();
+      dao::SlidesRow row{-1, author, mdContent, "", token, code, timestamp};
+      auto id = dao::addSlides(row);
 
-    string token = seeker::Secure::sha1(mdContent + seeker::Secure::randomChars(16));
-    token = seeker::String::toLower(token);
-
-    auto timestamp = seeker::Time::currentTime();
-
-    dao::SlidesRow row{-1, author, mdContent, "", token, code, timestamp};
-    auto id = dao::addSlides(row);
-
-    I_LOG("Slide added: mdContent={}, author={}, token={}, code={}, timestamp={}",
-          mdContent.substr(0, 16) + "..",
-          author,
-          token,
-          code,
-          timestamp);
-
-    //TODO return result page instead of redirect.
-    res.status = 303;
-    res.headers.insert({"Location", baseUrl + "/result?token=" + token});
+      I_LOG("Slide added: mdContent={}, author={}, token={}, code={}, timestamp={}",
+        mdContent.substr(0, 16) + "..",
+        author,
+        token,
+        code,
+        timestamp);
+      res.status = 303;
+      res.headers.insert({"Location", baseUrl + "/result?token=" + token + "&code=" + code});
+    }
   } else {
     W_LOG("can not fine [mdContent] error in request form.");
     res.status = 200;
@@ -95,15 +96,19 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
   }
 });
 
-//TODO no need it any more?
 Handler result = baseAction("result", [](const Request& req, Response& res) {
-  if (req.has_param("token")) {
+  if (req.has_param("token") && req.has_param("code")) {
     auto token = req.get_param_value("token");
+    auto code = req.get_param_value("code");
     I_LOG("get result for token={}", token);
     auto row = dao::getSlides(token);
-    res.set_content(pages::result(row), httpUtils::contentType::html);
+    if(seeker::String::trim(code) == row->editCode) {
+      res.set_content(pages::result(row), httpUtils::contentType::html);
+    } else {
+      res.status = 403;
+    }
   } else {
-    res.set_redirect(baseUrl.c_str());
+    res.status = 403;
   }
 });
 
@@ -140,9 +145,8 @@ Handler giftGet = baseAction("giftGet", [](const Request& req, Response& res) {
 });
 
 Handler giftPost = baseAction("giftPost", [](const Request& req, Response& res) {
-  if (req.has_file("token") && req.has_file("code") ) {
-    const auto& value = req.get_file_value("token");
-    auto token = req.get_file_value("token").content;
+  if (req.has_param("token") && req.has_file("code") ) {
+    auto token = req.get_param_value("token");
     auto code = req.get_file_value("code").content;
     I_LOG("giftPost for token={} with code={}", token, code);
     auto row = dao::getSlides(token);
@@ -153,7 +157,7 @@ Handler giftPost = baseAction("giftPost", [](const Request& req, Response& res) 
       res.set_content(pages::codeChecker(token), httpUtils::contentType::html);
     }
   } else {
-    W_LOG("giftPost form data error.");
+    W_LOG("giftPost params or form data error.");
     res.status = 404;
   }
 });

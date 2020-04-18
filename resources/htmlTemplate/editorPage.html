@@ -61,7 +61,10 @@
             method="post"
             enctype="multipart/form-data">
         <p>Author: <input type="text" name="author" /></p>
-        <p>Code: <input type="text" name="code" /></p>
+        <p>
+          Code:
+          <input type="text" name="code" />
+        </p>
       </form>
       <button onclick="submitClick()">Submit</button>
       <button onclick="previewClick()">Preview</button>
@@ -70,12 +73,28 @@
 
   <script>
 
+    var codePattern = /[a-zA-Z0-9]{3,}/;
+
+    function checkCode(code) {
+      console.log('codeValue:' + code);
+      console.log('codeValue length:' + code.length);
+      var rst = codePattern.exec(code);
+      console.log('rst:' + rst);
+      return rst == code;
+    }
+
     function submitClick() {
       console.log("submitClick...");
-      var form = document.forms['dataForm'];
-      form.action = "/littleGift/saveSlides";
-      form.target = "";
-      form.submit();
+      var codeValue = document.getElementsByName("code")[0].value;
+      console.log('codeValue:' + codeValue);
+      if (codeValue.length == 0 || checkCode(codeValue)) {
+        var form = document.forms['dataForm'];
+        form.action = "/littleGift/saveSlides";
+        form.target = "";
+        form.submit();
+      } else {
+        alert('valid code pattern: [a-zA-Z0-9]{3,}');
+      }
     }
 
     function previewClick() {

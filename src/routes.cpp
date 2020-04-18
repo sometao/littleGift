@@ -100,13 +100,47 @@ Server::Handler errorHandler = [](const Request& req, Response& res) {
   res.set_content(page.c_str(), "text/html");
 };
 
+
+
+//TODO optimize cache control headers like below.
+/*
+location ~* \.(?:manifest|appcache|html?|xml|json)$ {
+add_header Cache-Control "max-age=0";
+}
+
+location ~* \.(?:rss|atom)$ {
+add_header Cache-Control "max-age=3600";
+}
+
+location ~* \.(?:jpg|jpeg|gif|png|ico|cur|gz|svg|mp4|ogg|ogv|webm|htc)$ {
+add_header Cache-Control "max-age=2592000";
+access_log off;
+}
+
+location ~* \.(?:css|js)$ {
+add_header Cache-Control "max-age=31536000";
+access_log off;
+}
+
+location ~* \.(?:ttf|ttc|otf|eot|woff|woff2)$ {
+add_header Cache-Control "max-age=2592000";
+access_log off;
+}
+*/
+Server::Handler fileReqHandler = [](const Request& req, Response& res) {
+  T_LOG("access static file: path={} status={}", req.path, res.status);
+  res.set_header("Cache-Control", "max-age=3600");
+};
+
 httplib::Logger baseLogger = [](const Request& req, const Response& res) {
   I_LOG("[{}] access {}", req.method, req.path);
 };
 
+
 static void config(httplib::Server& server) {
   //server.set_logger(baseLogger);
   server.set_error_handler(errorHandler);
+  server.set_file_request_handler(fileReqHandler);
 }
 
 

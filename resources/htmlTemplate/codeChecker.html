@@ -17,7 +17,6 @@
       width: 150px;
       height: 60px;
       line-height: 60px;
-      background: blue;
       margin: 0 auto;
       position: relative;
       top: 40%;
@@ -27,9 +26,11 @@
 </head>
 <body style="background:black; color:white">
   <div id="codeContainer">
-    <form id="dataForm" method="post" enctype="multipart/form-data" action="/littleGift/gift">
-      <input name="code" type="text" placeholder="code" style="width: 100px;">
-      <input name="token" type="hidden" value="<!--@token[-->token<!--]token@-->" readonly>
+    <form id="dataForm"
+          method="post"
+          enctype="multipart/form-data"
+          action="/littleGift/gift?token=<!--@token[-->token<!--]token@-->">
+      <input name="code" type="text" placeholder="code" style="width: 100px;"/>
       <button type="submit" style="width: 35px;">Go</button>
     </form>
   </div>

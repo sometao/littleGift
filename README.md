@@ -10,7 +10,7 @@
 - [X] Post markdown text and get slides page.
 - [X] Keep markdown in DB
 - [X] Preview slides
-- [ ] Code to access slides page
+- [X] Code to access slides page
 - [ ] Delete data after expired
 - [ ] User system
 - [ ] Edit exist slides
@@ -35,3 +35,7 @@
 - [X] save data in DB.
 
 
+#### TODO 
+- [ ] Write instructions.
+- [ ] Preview without http request.
+- [ ] Optimize the editor experience.
