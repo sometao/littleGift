@@ -1,4 +1,4 @@
-### Little Gift v0.0.1
+### Little Gift v0.1.0
 ---
 
 #### Goal

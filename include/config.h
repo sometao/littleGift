@@ -2,7 +2,7 @@
 
 
 #define littleGift_VERSION_MAJOR 0
-#define littleGift_VERSION_MINOR 3
+#define littleGift_VERSION_MINOR 1
 
 /* #undef CPPHTTPLIB_ZLIB_SUPPORT */
 #define CPPHTTPLIB_OPENSSL_SUPPORT

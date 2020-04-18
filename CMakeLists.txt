@@ -5,7 +5,7 @@ cmake_minimum_required (VERSION 3.10)
 
 
 
-project ("littleGift" VERSION 0.3)
+project ("littleGift" VERSION 0.1.0)
 
 include(./cmake/checkBuildType.cmake)
 
