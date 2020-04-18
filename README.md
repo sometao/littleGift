@@ -1,10 +1,18 @@
-### Little Gift v0.1.0
+### Little Gift v0.1.1
 ---
 
 #### Goal
 - A easy way to presentation.
 - Try using http in C++.
 - Learning how to use database.
+
+#### instructions
+- Markdown text to slides.
+- Three empty lines for a new horizontal slide.
+- Two empty lines for a new vertical slide.
+- Input access code to make your slides secret.
+- Web Slide powered by [reveal.js](https://github.com/hakimel/reveal.js)
+
 
 #### Features
 - [X] Post markdown text and get slides page.
@@ -37,5 +45,6 @@
 
 #### TODO 
 - [ ] Write instructions.
+- [ ] Using configure file.
 - [ ] Preview without http request.
 - [ ] Optimize the editor experience.
