@@ -61,14 +61,11 @@ void launch(int port = 50082) {
   littleGift::startServer(interface, port);
 }
 
-
 }  // namespace
-
 
 
 int main(int argc, char* argv[]) {
   int port{-1};
-
   if (argc != 2) {
     cout << "Input Error." << endl;
     cout << "Usage: ./littleGift PORT" << endl;
@@ -76,7 +73,11 @@ int main(int argc, char* argv[]) {
   } else {
     try {
       port = std::stoi(argv[1]);
-    } catch (...) {
+    } catch(std::invalid_argument ex) {
+      cout << "Input error:" << ex.what() << endl;
+      cout << "Usage: ./littleGift PORT" << endl;
+      return -1;
+    }  catch (...) {
       cout << "Input error." << endl;
       cout << "Usage: ./littleGift PORT" << endl;
       return -1;

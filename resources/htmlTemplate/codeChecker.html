@@ -23,16 +23,27 @@
     }
   </style>
 
+
 </head>
 <body style="background:black; color:white">
   <div id="codeContainer">
     <form id="dataForm"
           method="post"
           enctype="multipart/form-data"
-          action="/littleGift/gift?token=<!--@token[-->token<!--]token@-->">
-      <input name="code" type="text" placeholder="code" style="width: 100px;"/>
+          action="">
+      <input name="code" type="text" placeholder="code" style="width: 100px;" />
       <button type="submit" style="width: 35px;">Go</button>
     </form>
   </div>
+
+  <script>
+    var actionUrl =
+      window.location.search.match(/print-pdf/gi) ?
+        '/littleGift/gift?token=<!--@token[-->token<!--]token@-->&print-pdf' :
+        '/littleGift/gift?token=<!--@token[-->token<!--]token@-->';
+
+    var form = document.forms['dataForm'];
+    form.action = actionUrl;
+  </script>
 </body>
 </html>
