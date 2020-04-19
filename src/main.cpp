@@ -50,15 +50,15 @@ namespace {
 //
 //}
 
-void launch() {
-
+// TODO read port from input.
+// TODO print version command
+// TODO print version on starting.
+void launch(int port = 50082) {
   littleGift::dao::init();
 
   auto interface = "0.0.0.0";
-  auto port = 50082;
 
   littleGift::startServer(interface, port);
-
 }
 
 
@@ -66,9 +66,27 @@ void launch() {
 
 
 
-int main() {
+int main(int argc, char* argv[]) {
+  int port{-1};
+
+  if (argc != 2) {
+    cout << "Input Error." << endl;
+    cout << "Usage: ./littleGift PORT" << endl;
+    return -1;
+  } else {
+    try {
+      port = std::stoi(argv[1]);
+    } catch (...) {
+      cout << "Input error." << endl;
+      cout << "Usage: ./littleGift PORT" << endl;
+      return -1;
+    }
+  }
+
   seeker::Logger::init(LOG_FILE_NAME, false);
-  launch();
+  launch(port);
+  return 0;
+
 
   // runTest();
 }
