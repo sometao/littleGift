@@ -22,7 +22,7 @@ const string editor() {
   return outHtml;
 }
 
-
+//FIXME markdown text out of text area.
 const string result( std::shared_ptr<dao::SlidesRow> row) {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("result.html");
   std::vector<string> args{row->content, row->accessToken, row->editCode, row->authorName, std::to_string(row->createTime)};
@@ -46,9 +46,10 @@ const string codeChecker(const string& token) {
 }
 
 //TODO rename preview to something else, like gift?
-const string preview(const string& mdContent) {
+//Default color, #191919 or #0154A0?
+const string preview(const string& mdContent, const string& background = "#191919") {
   static auto htmlPattern = httpTemplate::Engine::loadTemplate("preview.html");
-  std::vector<string> args{mdContent};
+  std::vector<string> args{mdContent, background};
   auto outHtml = htmlPattern->genHtml(args);
   return outHtml;
 }

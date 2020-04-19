@@ -21,7 +21,7 @@ namespace pages {
 extern const string editor();
 extern const string result(std::shared_ptr<dao::SlidesRow> row);
 extern const string gift(const string& mdUri);
-extern const string preview(const string& mdContent);
+extern const string preview(const string& mdContent, const string& background = "#191919");
 extern const string codeChecker(const string& mdContent);
 
 }  // namespace pages
@@ -74,6 +74,7 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
       W_LOG("saveSlides code[{}] length must larger than 2.", code);
       res.status = 403;
     } else {
+      //TODO remove sha1, ramdom token is ok.
       string token = seeker::Secure::sha1(mdContent + seeker::Secure::randomChars(16));
       token = seeker::String::toLower(token);
       auto timestamp = seeker::Time::currentTime();
@@ -102,7 +103,10 @@ Handler result = baseAction("result", [](const Request& req, Response& res) {
     auto code = req.get_param_value("code");
     I_LOG("get result for token={}", token);
     auto row = dao::getSlides(token);
-    if(seeker::String::trim(code) == row->editCode) {
+    if(row == nullptr) {
+      W_LOG("result: can not find gift by token[{}].", token);
+      res.status = 404;
+    } else if(seeker::String::trim(code) == row->editCode) {
       res.set_content(pages::result(row), httpUtils::contentType::html);
     } else {
       res.status = 403;
@@ -132,7 +136,10 @@ Handler giftGet = baseAction("giftGet", [](const Request& req, Response& res) {
   if (req.has_param("token")) {
     auto token = req.get_param_value("token");
     auto row = dao::getSlides(token);
-    if(row->editCode.empty()) {
+    if(row == nullptr) {
+      W_LOG("giftGet: can not find gift by token[{}].", token);
+      res.status = 404;
+    } else if(row->editCode.empty()) {
       string mdContent = formatMd(row->content);
       res.set_content(pages::preview(mdContent), httpUtils::contentType::html);
     } else {
@@ -150,7 +157,10 @@ Handler giftPost = baseAction("giftPost", [](const Request& req, Response& res) 
     auto code = req.get_file_value("code").content;
     I_LOG("giftPost for token={} with code={}", token, code);
     auto row = dao::getSlides(token);
-    if(seeker::String::trim(code) == row->editCode) {
+    if(row == nullptr) {
+      W_LOG("giftPost: can not find gift by token[{}].", token);
+      res.status = 404;
+    } else if(seeker::String::trim(code) == row->editCode) {
       string mdContent = formatMd(row->content);
       res.set_content(pages::preview(mdContent), httpUtils::contentType::html);
     } else {

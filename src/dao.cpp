@@ -67,6 +67,7 @@ int64_t addSlides(const SlidesRow& row) {
   return id;
 }
 
+//Return nullptr if can not get gift by the token.
 shared_ptr<SlidesRow> getSlides(const string& token) {
   static const string sql =
       "select id, author_name, content, content_type, access_token, edit_code, create_time "
