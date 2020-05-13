@@ -1,7 +1,7 @@
 ### Little Gift v0.1.1
 ---
 
-#### Goal
+#### Goals
 - A easy way to presentation.
 - Try using http in C++.
 - Learning how to use database.

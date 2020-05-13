@@ -82,7 +82,7 @@ Handler saveSlides = baseAction("saveSlides", [](const Request& req, Response& r
       auto id = dao::addSlides(row);
 
       I_LOG("Slide added: mdContent={}, author={}, token={}, code={}, timestamp={}",
-        mdContent.substr(0, 16) + "..",
+        mdContent.substr(0, 8) + "..",
         author,
         token,
         code,
