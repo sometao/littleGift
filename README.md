@@ -25,6 +25,23 @@
 - [ ] Local static server for html develop
 
 
+#### export to pdf
+1. add `print-pdf` parameter to URL.
+e.g:
+```
+http://HOST:PORT/littleGift/gift?token=fc0cb9aced3bd3c08175c4922292e3b1b0a21e9f
+```
+to
+```
+http://HOST:PORT/littleGift/gift?token=fc0cb9aced3bd3c08175c4922292e3b1b0a21e9f&print-pdf
+```
+2. Open the in-browser print dialog (CTRL/CMD+P).
+3. Change the Destination setting to Save as PDF.
+4. Change the Layout to Landscape.
+5. Change the Margins to None.
+6. Enable the Background graphics option.
+7. Click Save
+
 #### Pages
 - [X] Editor
 - [X] Preview
@@ -44,7 +61,7 @@
 
 
 #### TODO 
-- [ ] Write instructions.
+- [X] Write instructions.
 - [ ] Using configure file.
 - [ ] Preview without http request.
 - [ ] Optimize the editor experience.
